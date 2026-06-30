@@ -20,7 +20,6 @@ from . import __version__
 from .catalog_assets import is_catalog_source, resolve_catalog_source_path
 from .config import MINIMUM_CORE_VERSION
 from .core_client import CoreClient
-from .event_hooks import emit_event
 from .support import load_bluearch_executable_mapping
 
 app = typer.Typer(help="BlueArch Governance Hub")
@@ -142,22 +141,8 @@ def start_web(
     _ensure_core_dependency()
     if daemon:
         _start_web_daemon(host, port)
-        emit_event(
-            "web.server.start",
-            surface="daemon",
-            command="web_start",
-            status="success",
-            properties={"host": host, "port": port, "daemon": True},
-        )
         return
 
-    emit_event(
-        "web.server.start",
-        surface="web",
-        command="web_start",
-        status="success",
-        properties={"host": host, "port": port, "daemon": False},
-    )
     _run_web_server(host, port)
 
 
@@ -180,7 +165,6 @@ def stop_web():
         return
     _terminate_process(pid)
     GOVERNANCE_PID_FILE.unlink(missing_ok=True)
-    emit_event("web.server.stop", surface="daemon", command="web_stop", status="success")
     console.print("[green]Stopped Governance Hub web.[/green]")
 
 
@@ -189,13 +173,6 @@ def status_web(host: str = "127.0.0.1", port: int = 8097):
     """Show Governance Hub web daemon status."""
     pid = _read_web_pid()
     running = _is_pid_running(pid)
-    emit_event(
-        "web.server.status",
-        surface="daemon",
-        command="web_status",
-        status="success" if running else "stopped",
-        properties={"running": running},
-    )
     console.print(f"Process: {'running' if running else 'stopped'}")
     if pid:
         console.print(f"PID: {pid}")

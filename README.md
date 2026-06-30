@@ -20,7 +20,8 @@ This repo is not a separate hosted catalog service, account sign-in system, anal
 Validate catalog data:
 
 ```bash
-python catalog/scripts/validate.py catalog/by-service
+cd catalog
+python scripts/validate.py by-service
 ```
 
 ## Install
@@ -57,18 +58,45 @@ Frontend:
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
+```
+
+Shortcut:
+
+```bash
+make setup
+make backend-dev
+make frontend-dev
 ```
 
 ## Tests
 
 ```bash
+cd catalog && python scripts/validate.py by-service
 python -m pytest
 python -m compileall cloud_governance
 cd frontend && npm run build
 ```
 
+Shortcut:
+
+```bash
+make test
+```
+
+## Security And Privacy Defaults
+
+- The dashboard binds to loopback by default.
+- Calls to `bluearch-aws-core` use the local service token.
+- AWS credentials stay in the user's local AWS config/credential chain.
+- No BlueArch-hosted telemetry, hosted sign-in, license gates, or private release services are included.
+- Inventory, findings, reports, logs, and screenshots may contain sensitive account data.
+- Unsupported catalog entries stay non-executable until evaluators and IAM permissions are reviewed.
+- Report suspected vulnerabilities privately; see `SECURITY.md`.
+
 ## Contributing
 
 Keep the catalog in `catalog/by-service` and keep unsupported catalog rows non-executable until evaluators exist. Do not add hosted analytics, product sign-in, commercial gates, private AWS account IDs, private buckets, or internal release/signing automation.
+
+See `CONTRIBUTING.md` for the full contribution workflow.

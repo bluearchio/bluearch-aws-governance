@@ -205,6 +205,8 @@ tempCodeRunnerFile.py
 
 # Ruff stuff:
 .ruff_cache/
+*.egg-info/
+.pytest_cache/
 
 # PyPI configuration file
 .pypirc
@@ -216,3 +218,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/tsconfig.tsbuildinfo
+cloud_governance/static/

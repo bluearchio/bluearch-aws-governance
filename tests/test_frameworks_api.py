@@ -1,9 +1,3 @@
-import asyncio
-
-from starlette.requests import Request
-from starlette.responses import Response
-
-
 def _catalog_entry(catalog_id, payload, service="iam", executable=True):
     return {
         "catalog_id": catalog_id,
@@ -359,25 +353,36 @@ def test_misconfig_finding_groups_summarize_blast_radius(monkeypatch):
     assert group["sample_finding_id"] == "finding-2"
 
 
-def test_framework_endpoints_reject_unauthenticated_requests():
-    from cloud_governance.web import GovernanceAuthMiddleware
+def test_core_mutation_proxy_uses_service_token(monkeypatch):
+    from fastapi.testclient import TestClient
 
-    async def call_next(request):
-        return Response("ok")
+    from cloud_governance.web import create_app
 
-    scope = {
-        "type": "http",
-        "method": "GET",
-        "path": "/api/v1/frameworks/coverage",
-        "query_string": b"",
-        "headers": [],
-        "server": ("127.0.0.1", 8097),
-        "scheme": "http",
-        "client": ("127.0.0.1", 50000),
-    }
-    request = Request(scope)
-    middleware = GovernanceAuthMiddleware(app=lambda scope, receive, send: None)
+    calls = []
 
-    response = asyncio.run(middleware.dispatch(request, call_next))
+    class FakeCoreClient:
+        def proxy(self, method, path, service_token=False, **kwargs):
+            calls.append(
+                {
+                    "method": method,
+                    "path": path,
+                    "service_token": service_token,
+                    "kwargs": kwargs,
+                }
+            )
+            return {"ok": True}
 
-    assert response.status_code == 401
+    monkeypatch.setattr("cloud_governance.web.CoreClient", FakeCoreClient)
+
+    client = TestClient(create_app())
+    response = client.post("/api/v1/infrastructure/resource-group/create")
+
+    assert response.status_code == 200
+    assert calls == [
+        {
+            "method": "POST",
+            "path": "/api/v1/infrastructure/resource-group/create",
+            "service_token": True,
+            "kwargs": {},
+        }
+    ]
