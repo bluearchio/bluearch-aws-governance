@@ -1,0 +1,441 @@
+{
+  "service": "alb/elb",
+  "count": 16,
+  "misconfigurations": [
+    {
+      "id": "475b24d9-4b5b-4ce4-8161-af25f89bee49",
+      "service_name": "alb/elb",
+      "scenario": "Idle Load Balancers",
+      "alert_criteria": "A load balancer has had less than 100 requests per day for the last 7 days.",
+      "recommendation_action": "consider deleting your load balancer.",
+      "risk_detail": "cost",
+      "build_priority": 0,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Checks your Elastic Load Balancing configuration for load balancers that are not actively used. Any load balancer that is configured accrues charges. If a load balancer has no associated back-end instances or if network traffic is severely limited, the load balancer is not being used effectively",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-delete.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "75ba739e-a10d-4233-9d93-233587bf1de5",
+      "service_name": "alb/elb",
+      "scenario": "Idle Load Balancers",
+      "alert_criteria": "A load balancer has no healthy back-end instances.",
+      "recommendation_action": "-",
+      "risk_detail": "reliability",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "Checks your Elastic Load Balancing configuration for load balancers that are not actively used. Any load balancer that is configured accrues charges. If a load balancer has no associated back-end instances or if network traffic is severely limited, the load balancer is not being used effectively",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ts-elb-healthcheck.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "f8873ffb-d1ce-44d2-adf9-50148350fc92",
+      "service_name": "alb/elb",
+      "scenario": "Idle Load Balancers",
+      "alert_criteria": "A load balancer has no active back-end instances.",
+      "recommendation_action": "consider registering instances or deleting your load balancer.",
+      "risk_detail": "cost",
+      "build_priority": 0,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Checks your Elastic Load Balancing configuration for load balancers that are not actively used. Any load balancer that is configured accrues charges. If a load balancer has no associated back-end instances or if network traffic is severely limited, the load balancer is not being used effectively",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-deregister-register-instances.html#RegisteringInstances",
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-delete.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "eba421cf-bea5-4fa2-982a-c992016bd34f",
+      "service_name": "alb/elb",
+      "scenario": "user wants to ensure the availability / performance of their auto scaling group(s)",
+      "alert_criteria": "instance that is attached to the autoscaling group has been stopped or hibernated",
+      "recommendation_action": "restart instance or attach new instance to the auto scaling group",
+      "risk_detail": "reliability",
+      "build_priority": 0,
+      "action_value": 1,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "b0ee1465-5cd5-4b8e-9ceb-c22ffcbdba88",
+      "service_name": "alb/elb",
+      "scenario": "application / load balancers are not detecting failed connections fast enough",
+      "alert_criteria": "Condition detected: application / load balancers are not detecting failed connections fast enough",
+      "recommendation_action": "update response timeout, interval, unhealthy, and healthy thresholds for ELB(s) to a more ganular level",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "load balancer is not able to detect a failed response in a timely manner. this results in traffic being routed to an unhealthy resource",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.206016+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "297a0e89-3930-4c98-aaae-108dd7dc6c90",
+      "service_name": "alb/elb",
+      "scenario": "Your application load balancer is hosting X target groups with various hostnames; you would like to expose https traffic for each of these host names.",
+      "alert_criteria": "Condition detected: Your application load balancer is hosting X target groups with various hostnames; you would like to ",
+      "recommendation_action": "check if the client supports SNI (server name identification)",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.207042+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "01e58c92-8f90-4ef0-a438-e35bf01ecfd8",
+      "service_name": "alb/elb",
+      "scenario": "users are being routed to instances that are not running (or have performance issues)",
+      "alert_criteria": "Condition detected: users are being routed to instances that are not running (or have performance issues)",
+      "recommendation_action": "enable ELB health checks and ensure traffic is being routed only to instances that are stable / meet health check requirements",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.211127+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "be4fc192-947d-4012-aeb5-54bec0d07873",
+      "service_name": "alb/elb",
+      "scenario": "You are creating an application that is going to expose an HTTP REST API. There is a need to provide request routing rules at the HTTP level. Due to security requirements, your application can only be exposed through the use of two static IPs.",
+      "alert_criteria": "Condition detected: You are creating an application that is going to expose an HTTP REST API. There is a need to provide",
+      "recommendation_action": "use global accelerator and an application load balancer (Global Accelerator will provide us with the two static IP, and the ALB will provide use with the HTTP routing rules)",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.213159+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "71534f32-7b63-4d9b-8c41-9328ea305e23",
+      "service_name": "alb/elb",
+      "scenario": "user wants to remove weak ciphers for ELB",
+      "alert_criteria": "Condition detected: user wants to remove weak ciphers for ELB",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.217435+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "00b372b2-8825-4bdf-834f-b10742dc715b",
+      "service_name": "alb/elb",
+      "scenario": "user wants to ensure that elb has a recommended ssl/tls protocol version",
+      "alert_criteria": "Condition detected: user wants to ensure that elb has a recommended ssl/tls protocol version",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.220846+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "8ac617e8-5a7a-4da8-8084-7ef5e5cbc74c",
+      "service_name": "alb/elb",
+      "scenario": "user wants to ensure ELB are created with access logs enabled",
+      "alert_criteria": "Condition detected: user wants to ensure ELB are created with access logs enabled",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.220914+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "b5337466-a827-460e-873e-613c28a101e4",
+      "service_name": "alb/elb",
+      "scenario": "user wants to ensure ELB is setup with SSL for secure communication",
+      "alert_criteria": "Condition detected: user wants to ensure ELB is setup with SSL for secure communication",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.220985+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "a3e36ea7-b611-4706-bc1f-40f09a17dc70",
+      "service_name": "alb/elb",
+      "scenario": "user wants to be notified when ELB securied listener certificate expires in 1 month",
+      "alert_criteria": "Condition detected: user wants to be notified when ELB securied listener certificate expires in 1 month",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.221065+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "b70a15dd-4b86-4345-ab46-a3e02c6abfea",
+      "service_name": "alb/elb",
+      "scenario": "user wants to be notified when ELB securied listener certificate expires in 1 week",
+      "alert_criteria": "Condition detected: user wants to be notified when ELB securied listener certificate expires in 1 week",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.221144+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "38ef673f-016f-4b10-ba8c-e0ab9d15494a",
+      "service_name": "alb/elb",
+      "scenario": "user wants to be notified when ALB securied listener certificate expires in 1 month",
+      "alert_criteria": "Condition detected: user wants to be notified when ALB securied listener certificate expires in 1 month",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.221624+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "255365fe-3007-414f-85b6-713846173847",
+      "service_name": "alb/elb",
+      "scenario": "user wants to be notified when ALB securied listener certificate expires in 1 week",
+      "alert_criteria": "Condition detected: user wants to be notified when ALB securied listener certificate expires in 1 week",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.221704+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    }
+  ]
+}

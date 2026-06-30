@@ -1,0 +1,1076 @@
+{
+  "service": "general",
+  "count": 32,
+  "misconfigurations": [
+    {
+      "id": "4931f8b7-1bff-4c2b-adf9-926a338b926f",
+      "service_name": "general",
+      "scenario": "user wants to know WHEN the right time to purchase a savings plan in",
+      "alert_criteria": "predictable usage data can be used to justify a savings plan recommendation",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": 0,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "Savings Plans are a flexible pricing model that offer low prices on EC2, Fargate and Lambda usage, in exchange for a commitment to a consistent amount of usage (measured in $/hour) for a 1 or 3 year term. Savings Plans provide you the flexibility to use the compute option that best suits your needs and automatically save money, all without having to perform exchanges or modifications. When you sign up for a Savings Plan, you will be charged the discounted Savings Plans price for your usage up to your commitment.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "9c7e25a7-9655-4bb0-ab9f-287cf3cd9952",
+      "service_name": "general",
+      "scenario": "user does not want instances with unencrypted ports",
+      "alert_criteria": "Condition detected: user does not want instances with unencrypted ports",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "c6c883a7-949d-469c-a468-4acb0889dede",
+      "service_name": "general",
+      "scenario": "user does not want networkloadbalancer with unencrypted ports",
+      "alert_criteria": "Condition detected: user does not want networkloadbalancer with unencrypted ports",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "5aeeba22-fdc7-444a-9ba1-1fd5e11f3557",
+      "service_name": "general",
+      "scenario": "language used is not ideal for the specific workload",
+      "alert_criteria": "Condition detected: language used is not ideal for the specific workload",
+      "recommendation_action": "change language from X to Y",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "a3a4dde9-da1b-4b50-bbb9-8bac2c25059e",
+      "service_name": "general",
+      "scenario": "logs full & cpu utilization spiked",
+      "alert_criteria": "Condition detected: logs full & cpu utilization spiked",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "6562cd29-30a1-436b-835c-c38060e0501e",
+      "service_name": "general",
+      "scenario": "Convertible Reserved instances recommended",
+      "alert_criteria": "Condition detected: Convertible Reserved instances recommended",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Good for long but variable workloads",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "77c37bf0-446e-4292-bc1e-cdb3dfb81a6a",
+      "service_name": "general",
+      "scenario": "Scheduled reserved instances recommended",
+      "alert_criteria": "Condition detected: Scheduled reserved instances recommended",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Good for predictable workloads (eg Thursday's from 4-6pm)",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "770874ca-2a47-4243-96fe-25014d6c403d",
+      "service_name": "general",
+      "scenario": "Dedicated host recommended",
+      "alert_criteria": "Condition detected: Dedicated host recommended",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Good when compliance requirements must be met or you have existing, server-bound software licenses you would like to keep",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "a946417d-d42f-4c9e-b129-de887414717f",
+      "service_name": "general",
+      "scenario": "client wants more detailed invoicing",
+      "alert_criteria": "Condition detected: client wants more detailed invoicing",
+      "recommendation_action": "generate a detailed cost and usage report",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "invoicing is grouped by high-level service type, region, and month. user would like to see an itemized report with specific user profile attached to the line item, in addition to custom grouping capabilities",
+      "category": null,
+      "output_notes": null,
+      "notes": "not really a \"recommendation\" so much as a product feature, though it would likely be develped and stored in the same module (alerts_engine)",
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "2aae8134-3a6d-4207-b1e3-73687851270e",
+      "service_name": "general",
+      "scenario": "customer wants to auto-scale their instances based on the number of requests per minute (or some other metric)",
+      "alert_criteria": "Condition detected: customer wants to auto-scale their instances based on the number of requests per minute (or some oth",
+      "recommendation_action": "create cloudwatch alarms and scale your instances based on the \"better\" metrics, like target average CPU usage, offered by cloudwatch (or some other custom metric)",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": "custom metrics could come from other busines cases / systems, such as website traffic. cost / budget, etc.",
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "c121f7a5-3181-448f-a419-c64d6edb936b",
+      "service_name": "general",
+      "scenario": "parameter groups or database is not configured to ONLY allow SSL connection",
+      "alert_criteria": "Configuration does not follow recommended settings",
+      "recommendation_action": "comfigure parameter groups or db to only allow ssl connections",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "59d4888f-2041-4113-b08e-ee5353b37f14",
+      "service_name": "general",
+      "scenario": "root volumes are not encrypted",
+      "alert_criteria": "Condition detected: root volumes are not encrypted",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "98c656bb-8ca3-4ca9-a69a-3c8f30279ed3",
+      "service_name": "general",
+      "scenario": "end-user would like to group costs based on their business logic or product catalog",
+      "alert_criteria": "Condition detected: end-user would like to group costs based on their business logic or product catalog",
+      "recommendation_action": "create cost categories based on product catelog",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "in order to calculate true COGS, one must know what percentage of that cost infra is responsible for; in order to tie infra costs to product, you need to create cost categories",
+      "category": null,
+      "output_notes": null,
+      "notes": "can be pseudo-automated, but requires business knowledge and human-to-human interaction; good candidate for consultancy hand-off",
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "88fbe98e-6f7d-481f-9c1d-5ac56aa50cac",
+      "service_name": "general",
+      "scenario": "routing is currently set to a geolocation based policy, but does not have a default IP address",
+      "alert_criteria": "Condition detected: routing is currently set to a geolocation based policy, but does not have a default IP address",
+      "recommendation_action": "create a default IP address to ensure all users who visit ythe specified IP have access to the content behind it",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "0e7afc00-2870-4cc7-a079-00e74c45fe6f",
+      "service_name": "general",
+      "scenario": "user wants to supply their own encryption keys",
+      "alert_criteria": "Condition detected: user wants to supply their own encryption keys",
+      "recommendation_action": "upload files with SSE-C; HTTPS required",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "40814f77-0b20-4cd2-92b9-ca3b36e1627b",
+      "service_name": "general",
+      "scenario": "uaer needs on premise file data backed up in the cloud",
+      "alert_criteria": "Condition detected: uaer needs on premise file data backed up in the cloud",
+      "recommendation_action": "use storage (file) gateway",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "26e95c6f-5656-46a5-a1fa-35a516468d41",
+      "service_name": "general",
+      "scenario": "uaer needs on premise tape data backed up in the cloud",
+      "alert_criteria": "Condition detected: uaer needs on premise tape data backed up in the cloud",
+      "recommendation_action": "use storage (tape) gateway",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "7cf0ec49-3d87-46ce-957a-72afa928c6ce",
+      "service_name": "general",
+      "scenario": "user does not want to grant any external privileges via ACL",
+      "alert_criteria": "Condition detected: user does not want to grant any external privileges via ACL",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "0c9148d4-9510-4da6-9512-33286d31a480",
+      "service_name": "general",
+      "scenario": "user wants encrypted storage for instances that might host a database",
+      "alert_criteria": "Condition detected: user wants encrypted storage for instances that might host a database",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "d01ab648-6ef5-45fe-ad93-539da6d9a9bb",
+      "service_name": "general",
+      "scenario": "user wants to ensure rotation for customer created CMKs is enabled",
+      "alert_criteria": "Condition detected: user wants to ensure rotation for customer created CMKs is enabled",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "f44654fb-441f-489b-b814-fa7366050862",
+      "service_name": "general",
+      "scenario": "user wants to be notified when a credentials report was generated in the last 24 hours",
+      "alert_criteria": "Condition detected: user wants to be notified when a credentials report was generated in the last 24 hours",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "7f1dd337-60f3-4072-88a5-a67bcaef7fcd",
+      "service_name": "general",
+      "scenario": "user does not want to allow get actions from all principals",
+      "alert_criteria": "Condition detected: user does not want to allow get actions from all principals",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "58e96572-c0f4-466d-ab62-4452d7a1bca6",
+      "service_name": "general",
+      "scenario": "user does not want to allow list actions from all principals",
+      "alert_criteria": "Condition detected: user does not want to allow list actions from all principals",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "ba16b11d-85b2-4f83-81e5-33e1255afce0",
+      "service_name": "general",
+      "scenario": "AWS resources lack cost allocation tags for tracking and attribution",
+      "alert_criteria": "Resources exist without mandatory cost allocation tags (cost-center, project, owner, environment) preventing accurate chargeback and showback",
+      "recommendation_action": "Implement organization-wide tagging schema with mandatory tags and use AWS Tag Editor or Tag Policies to enforce compliance",
+      "risk_detail": "cost, operations",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "COST03-BP02: Without proper tagging, organizations cannot attribute costs to specific business units, projects, or applications. This prevents effective cost optimization, chargeback/showback, and financial accountability. Implement a consistent tagging schema including cost-center, project-id, owner, environment, and application tags. Use AWS Cost Categories to group costs, Tag Policies for governance, and Cost Explorer to analyze spending by tag dimensions.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST03-BP02",
+      "references": [
+        "https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/cost_monitor_usage_org_information.html",
+        "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T05:13:46.581727+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "planned_resource_metadata",
+        "detector_status": "planned",
+        "support_reason": "Can be evaluated from collected AWS resource, account, configuration, or utilization metadata once a detector is implemented.",
+        "roadmap_phase": "detector-candidate"
+      },
+      "tags": [
+        "tagging",
+        "cost-allocation",
+        "chargeback",
+        "governance",
+        "well-architected",
+        "cost03-bp02",
+        "cost_optimization",
+        "planned"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST03-BP02"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST03-BP02"
+      ]
+    },
+    {
+      "id": "a902454a-eb8f-43f0-82cc-37579ed18a47",
+      "service_name": "general",
+      "scenario": "Workloads with predictable steady-state usage lack Savings Plan or Reserved Instance coverage",
+      "alert_criteria": "On-Demand usage >40% for production workloads with consistent 24/7 runtime and predictable capacity requirements",
+      "recommendation_action": "Purchase Compute Savings Plans or EC2 Instance Savings Plans to cover 60-80% of steady-state usage for up to 72% cost reduction",
+      "risk_detail": "cost",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Organizations paying On-Demand rates for predictable workloads miss significant savings opportunities. Savings Plans offer up to 72% discount vs On-Demand pricing with flexible commitment options. Analyze usage patterns with AWS Cost Explorer, target 60-80% coverage for steady-state workloads, and combine with On-Demand/Spot for variable capacity. Compute Savings Plans apply across EC2, Fargate, and Lambda; EC2 Instance Savings Plans offer higher discounts for specific instance families.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework - Maintain 60-80% coverage leaving room for infrastructure evolution",
+      "references": [
+        "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html",
+        "https://aws.amazon.com/savingsplans/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T05:13:46.581727+00:00",
+        "updated_at": "2025-11-06T05:13:46.581727+00:00",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025"
+      },
+      "tags": [
+        "savings-plans",
+        "reserved-instances",
+        "commitment-discounts"
+      ]
+    },
+    {
+      "id": "6bb5f985-d986-414b-851d-1cd985e89c4e",
+      "service_name": "general",
+      "scenario": "No standardized decommissioning process resulting in abandoned resources accumulating costs",
+      "alert_criteria": "Resources exist for completed projects, no defined process for identifying and removing unused infrastructure, or resources without ownership tags",
+      "recommendation_action": "Implement COST04-BP02 decommissioning workflow: verify usage, document metadata, apply restrictive controls temporarily, then systematically remove resources",
+      "risk_detail": "cost, operations",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 3,
+      "risk_value": 2,
+      "recommendation_description_detailed": "COST04-BP02: Without a formal decommissioning process, organizations accumulate unused resources from completed projects, departed employees, or abandoned experiments. Implement a standardized workflow: 1) Identify resources for decommission, 2) Verify with stakeholders, 3) Document metadata (IPs, configs), 4) Create backups if needed, 5) Apply restrictive policies for observation period, 6) Remove from automation/monitoring, 7) Delete resources. Include load balancers, EC2 instances, Auto Scaling groups, EBS volumes/snapshots, Elastic IPs, AMIs, and Elastic Beanstalk environments.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST04-BP02 - High risk if not implemented",
+      "references": [
+        "https://docs.aws.amazon.com/wellarchitected/latest/framework/cost_decomissioning_resources_implement_process.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T05:13:46.581727+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "planned_resource_metadata",
+        "detector_status": "planned",
+        "support_reason": "Can be evaluated from collected AWS resource, account, configuration, or utilization metadata once a detector is implemented.",
+        "roadmap_phase": "detector-candidate"
+      },
+      "tags": [
+        "decommissioning",
+        "resource-cleanup",
+        "lifecycle-management",
+        "well-architected",
+        "cost04-bp02",
+        "cost_optimization",
+        "planned"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST04-BP02"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST04-BP02"
+      ]
+    },
+    {
+      "id": "cf28fb38-e084-42c6-9e82-49a836a7a1b3",
+      "service_name": "general",
+      "scenario": "AWS accounts lack budgets and proactive spending controls resulting in cost overruns",
+      "alert_criteria": "No AWS Budgets configured for monthly spend, service costs, or Reserved Instance/Savings Plan utilization tracking",
+      "recommendation_action": "Create AWS Budgets for total monthly spend (with 50%, 80%, 100% thresholds), service-specific budgets, and RI/SP coverage tracking with SNS notifications",
+      "risk_detail": "cost, operations",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "COST02-BP05: AWS Budgets provide proactive cost controls through customizable alerts and thresholds. Create budgets for: 1) Total monthly spend with 50%/80%/100% alerts, 2) Individual service costs (EC2, S3, RDS), 3) Specific projects/teams using cost allocation tags, 4) RI/SP utilization and coverage. First 2 budgets are free; $0.02/day per additional budget. Integrate with SNS for email/Slack notifications. Advanced: Use Budget Actions to automatically apply IAM policies or SCPs when thresholds exceeded. Organizations with budgets reduce cost overruns by 60-80%.",
+      "category": "operations",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST02-BP05 - Implement cost controls",
+      "references": [
+        "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
+        "https://aws.amazon.com/aws-cost-management/aws-budgets/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T05:13:46.581727+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "planned_resource_metadata",
+        "detector_status": "planned",
+        "support_reason": "Can be evaluated from collected AWS resource, account, configuration, or utilization metadata once a detector is implemented.",
+        "roadmap_phase": "detector-candidate"
+      },
+      "tags": [
+        "aws-budgets",
+        "cost-controls",
+        "spending-alerts",
+        "governance",
+        "well-architected",
+        "cost02-bp05",
+        "cost_optimization",
+        "planned"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST02-BP05"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST02-BP05"
+      ]
+    },
+    {
+      "id": "c6d9e5f2-7b3a-4c8e-9d1f-8a2b7e4c5d6e",
+      "service_name": "general",
+      "scenario": "Organization lacks dedicated Cloud Financial Management team or FinOps function",
+      "alert_criteria": "No designated cost optimization owner, cost reviews occur reactively after bill shock, or finance and engineering teams operate in silos",
+      "recommendation_action": "Establish COST01-BP01: Create Cloud Center of Excellence (CCoE) or FinOps team with dedicated ownership for cost optimization, reporting to both finance and engineering leadership",
+      "risk_detail": "cost, operations",
+      "build_priority": 0,
+      "action_value": 3,
+      "effort_level": 3,
+      "risk_value": 3,
+      "recommendation_description_detailed": "COST01-BP01: Organizations without dedicated cost management ownership experience 30-50% higher cloud costs. Establish a FinOps team (1-3 FTEs for organizations spending $1M+/year) responsible for: cost visibility, budget management, optimization recommendations, policy enforcement, and cultural enablement. Team should report to both CFO and CTO to bridge finance-technology gap. Key functions: monthly cost reviews, tagging enforcement, Savings Plan/RI management, cost allocation, showback/chargeback. ROI: FinOps teams typically drive 15-30% cost reduction within first year, far exceeding team cost.",
+      "category": "operations",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST01-BP01 - Foundation for all cost optimization",
+      "references": [
+        "https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/cost_cloud_financial_management_function.html",
+        "https://www.finops.org/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "unsupported_manual",
+        "detector_status": "manual_review",
+        "support_reason": "Requires workload design, organizational process, business context, or evidence that cannot be proven from collected AWS resource metadata.",
+        "roadmap_phase": "manual-review-only"
+      },
+      "tags": [
+        "finops",
+        "cloud-financial-management",
+        "cost-optimization-function",
+        "governance",
+        "well-architected",
+        "cost01-bp01",
+        "cost_optimization",
+        "manual_review"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST01-BP01"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST01-BP01"
+      ]
+    },
+    {
+      "id": "d7e4f8a2-9c5b-4d3e-8f6a-1b9c7e5d4a6f",
+      "service_name": "general",
+      "scenario": "Workloads built with undifferentiated heavy lifting instead of leveraging managed services",
+      "alert_criteria": "Self-managed databases, message queues, container orchestration, or caching layers when AWS managed service equivalents exist (RDS vs self-managed MySQL, MQ vs self-managed RabbitMQ, EKS vs self-managed K8s)",
+      "recommendation_action": "Evaluate COST05-BP05: migrate to managed services (RDS, Aurora, ElastiCache, MQ, ECS/EKS, Lambda) to reduce operational overhead and often reduce total cost of ownership",
+      "risk_detail": "cost, operations",
+      "build_priority": 2,
+      "action_value": 3,
+      "effort_level": 3,
+      "risk_value": 2,
+      "recommendation_description_detailed": "COST05-BP05: Self-managed infrastructure requires EC2 instances, storage, licensing, patching, backups, monitoring, and engineering time. Managed services eliminate this overhead while often reducing costs. Example: Self-managed PostgreSQL on r5.2xlarge ($0.504/hr * 730hr = $368/month) + EBS ($50) + engineering time ($500/month) = $918/month vs RDS db.r5.2xlarge = $584/month (36% savings). Additional managed service benefits: automatic backups, patching, high availability, scalability. Evaluate migration for: databases (→ RDS/Aurora), caching (→ ElastiCache), message queues (→ SQS/SNS/MQ), containers (→ ECS/EKS/Fargate).",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST05-BP05 - Managed services reduce TCO",
+      "references": [
+        "https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/welcome.html",
+        "https://aws.amazon.com/products/databases/",
+        "https://aws.amazon.com/products/management-and-governance/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "planned_resource_metadata",
+        "detector_status": "planned",
+        "support_reason": "Can be evaluated from collected AWS resource, account, configuration, or utilization metadata once a detector is implemented.",
+        "roadmap_phase": "detector-candidate"
+      },
+      "tags": [
+        "managed-services",
+        "total-cost-ownership",
+        "operational-efficiency",
+        "modernization",
+        "well-architected",
+        "cost05-bp05",
+        "cost_optimization",
+        "planned"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST05-BP05"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST05-BP05"
+      ]
+    },
+    {
+      "id": "e8f5a9b3-1c6d-4e7f-9a8b-2c5d8f6e3b7a",
+      "service_name": "general",
+      "scenario": "Workloads deployed without upfront cost modeling leading to budget overruns",
+      "alert_criteria": "New projects deployed without cost estimates, actual costs exceed projections by >30%, or architectural decisions made without cost analysis",
+      "recommendation_action": "Implement COST06-BP01: perform cost modeling using AWS Pricing Calculator before deployment, establish cost targets per workload, validate assumptions with pilots",
+      "risk_detail": "cost, operations",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "COST06-BP01: Organizations deploying without cost modeling experience 25-40% cost overruns. Use AWS Pricing Calculator to model costs across multiple architecture options before committing. Include: compute, storage, data transfer, managed services, and reserved capacity discounts. Compare options: serverless vs containers vs EC2, single-region vs multi-region, GP2 vs GP3 storage. Validate with proof-of-concept deployments. Establish cost per transaction/user/request metrics. Review monthly to track actuals vs model. Iterate architecture based on cost data. Example: modeling revealed serverless option was 60% cheaper than container option for variable traffic workload.",
+      "category": "operations",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST06-BP01 - Model before building",
+      "references": [
+        "https://calculator.aws/",
+        "https://docs.aws.amazon.com/wellarchitected/latest/framework/cost_type_size_number_resources_cost_modeling.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "planned_resource_metadata",
+        "detector_status": "planned",
+        "support_reason": "Can be evaluated from collected AWS resource, account, configuration, or utilization metadata once a detector is implemented.",
+        "roadmap_phase": "detector-candidate"
+      },
+      "tags": [
+        "cost-modeling",
+        "pricing-calculator",
+        "budget-planning",
+        "architecture-decisions",
+        "well-architected",
+        "cost06-bp01",
+        "cost_optimization",
+        "planned"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST06-BP01"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST06-BP01"
+      ]
+    },
+    {
+      "id": "f9a6b1c4-2d7e-4f8a-9b6c-3d8e9f7a5b1c",
+      "service_name": "general",
+      "scenario": "Engineering teams lack cost awareness and accountability for cloud spending",
+      "alert_criteria": "Developers unaware of resource costs, no cost metrics in team dashboards, cost optimization not included in performance reviews or sprint planning",
+      "recommendation_action": "Establish COST01-BP08: create cost-aware culture by including cost metrics in engineering dashboards, making cost part of architecture reviews, recognizing cost optimization achievements",
+      "risk_detail": "cost, operations",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "COST01-BP08: Engineering teams make architecture decisions impacting 80% of cloud costs, yet often lack cost visibility. Build cost-aware culture: 1) Display cost dashboards in team spaces showing daily spend trends, 2) Include cost in sprint retrospectives and architecture reviews, 3) Implement cost per feature/transaction metrics, 4) Gamify optimization with team competitions and recognition, 5) Provide training on cost-effective architecture patterns. Integrate cost into CI/CD with tools showing estimated cost impact of changes. Organizations with strong cost culture achieve 20-35% lower costs while maintaining innovation velocity.",
+      "category": "operations",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST01-BP08 - Culture drives sustainable optimization",
+      "references": [
+        "https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/cost_cloud_financial_management_culture.html",
+        "https://www.finops.org/framework/capabilities/cost-culture/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "unsupported_manual",
+        "detector_status": "manual_review",
+        "support_reason": "Requires workload design, organizational process, business context, or evidence that cannot be proven from collected AWS resource metadata.",
+        "roadmap_phase": "manual-review-only"
+      },
+      "tags": [
+        "cost-culture",
+        "engineering-culture",
+        "cost-awareness",
+        "organizational-change",
+        "well-architected",
+        "cost01-bp08",
+        "cost_optimization",
+        "manual_review"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST01-BP08"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST01-BP08"
+      ]
+    },
+    {
+      "id": "a1b7c2d8-3e9f-4a5b-8c6d-9e1f7a4b3c5d",
+      "service_name": "general",
+      "scenario": "Resources not leveraging shared infrastructure leading to resource sprawl and duplication",
+      "alert_criteria": "Each application team deploying separate NAT Gateways, Transit Gateways, VPCs, or shared services instead of using centralized shared resources",
+      "recommendation_action": "Implement COST06-BP04: establish shared service model for common infrastructure (centralized NAT Gateways, Transit Gateway, VPC, monitoring, security tools) with cost allocation via tags",
+      "risk_detail": "cost, operations",
+      "build_priority": 2,
+      "action_value": 2,
+      "effort_level": 3,
+      "risk_value": 1,
+      "recommendation_description_detailed": "COST06-BP04: Independent teams deploying duplicate infrastructure waste 40-60% on shared services. Implement shared service model: 1) Centralized networking (shared VPC with Transit Gateway, NAT Gateways), 2) Shared security tools (GuardDuty, Security Hub per organization vs per account), 3) Centralized monitoring (single CloudWatch/DataDog instance), 4) Shared CI/CD infrastructure. Use cost allocation tags for chargeback. Example: 20 teams each with NAT Gateway ($1,080/year) = $21,600/year vs centralized NAT Gateways with sharing = $3,240/year (85% savings). AWS Organizations enables cross-account resource sharing.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST06-BP04 - Shared resources reduce duplication",
+      "references": [
+        "https://docs.aws.amazon.com/wellarchitected/latest/framework/cost-06.html",
+        "https://aws.amazon.com/ram/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "planned_resource_metadata",
+        "detector_status": "planned",
+        "support_reason": "Can be evaluated from collected AWS resource, account, configuration, or utilization metadata once a detector is implemented.",
+        "roadmap_phase": "detector-candidate"
+      },
+      "tags": [
+        "shared-resources",
+        "resource-sharing",
+        "centralization",
+        "infrastructure-consolidation",
+        "well-architected",
+        "cost06-bp04",
+        "cost_optimization",
+        "planned"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST06-BP04"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST06-BP04"
+      ]
+    }
+  ]
+}

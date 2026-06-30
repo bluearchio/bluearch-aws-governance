@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bluearch-aws-governance"
+version = "0.1.0"
+description = "BlueArch AWS Governance Hub with bundled misconfiguration catalog."
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110.0",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
+    "rich>=13.0.0",
+    "typer>=0.9.0",
+    "uvicorn>=0.27.0",
+]
+
+[project.scripts]
+cloud-governance = "cloud_governance.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["cloud_governance*"]
+
+[tool.setuptools.package-data]
+cloud_governance = ["static/*", "static/assets/*", "catalog_seed/by-service/*.json"]

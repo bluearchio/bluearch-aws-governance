@@ -1,0 +1,304 @@
+{
+  "service": "ebs",
+  "count": 10,
+  "misconfigurations": [
+    {
+      "id": "8dfe3ba4-c72f-4ed8-9a07-f88c1ccc8b3b",
+      "service_name": "ebs",
+      "scenario": "user wants to ensure that only necessary / needed snapshots are available for use",
+      "alert_criteria": "if snapshot is older than seven days and/or is older than another snapshot made from an identical volume, then recommend deletion",
+      "recommendation_action": "delete snapshot",
+      "risk_detail": "cost",
+      "build_priority": 0,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 1,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "9b4bd9b6-9139-4e8d-a157-055bbb6bacc3",
+      "service_name": "ebs",
+      "scenario": "user wants to ensure ebs volumes are deleted when an instance is terminated",
+      "alert_criteria": "\"delete on termination\" flag on instances is set to false",
+      "recommendation_action": "set \"delete on termination\" flag to true (enable automatic deletion upon instance termination)",
+      "risk_detail": "cost",
+      "build_priority": 0,
+      "action_value": 1,
+      "effort_level": 0,
+      "risk_value": 0,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "444fd30a-f2f2-4a7f-afbc-063349fc900f",
+      "service_name": "ebs",
+      "scenario": "Amazon EBS Provisioned IOPS (SSD) Volume Attachment Configuration",
+      "alert_criteria": "An Amazon EC2 instance that can be EBS-optimized has an attached Provisioned IOPS (SSD) volume but the instance is not EBS-optimized.",
+      "recommendation_action": "create new \"ebs-optimized\" ssd by provisioning a new instance",
+      "risk_detail": "performance",
+      "build_priority": 0,
+      "action_value": 1,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Checks for Provisioned IOPS (SSD) volumes that are attached to an Amazon EBS-optimizable Amazon Elastic Compute Cloud (Amazon EC2) instance that is not EBS-optimized. Provisioned IOPS (SSD) volumes in the Amazon Elastic Block Store (Amazon EBS) are designed to deliver the expected performance only when they are attached to an EBS-optimized instance.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html",
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-attaching-volume.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "9962a78d-7100-4d15-bc9c-c62a6c0d3b91",
+      "service_name": "ebs",
+      "scenario": "user wants to prevent volumes (root or attached) from filling up, forcing a restart and leading to a new IP address (if an elastic ip has not been assigned)",
+      "alert_criteria": "volume storage capacity has less than threshold (%) remaining",
+      "recommendation_action": "increase the storage size of your targeted volumes",
+      "risk_detail": "operations",
+      "build_priority": 0,
+      "action_value": 1,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "03060d2d-96d3-43aa-ba18-2968fc8a7189",
+      "service_name": "ebs",
+      "scenario": "Overutilized Amazon EBS Magnetic Volumes",
+      "alert_criteria": "An Amazon EBS Magnetic volume is attached to an instance that can be EBS-optimized or is part of a cluster compute network with a daily median of more than 95 IOPS, and varies by less than 10% of the median value for at least 7 of the past 14 days.",
+      "recommendation_action": "- For consistently higher IOPS, you can use a Provisioned IOPS (SSD) volume. \n- For bursty IOPS, you can use a General Purpose (SSD) volume",
+      "risk_detail": "performance",
+      "build_priority": 0,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Checks for Amazon Elastic Block Store (EBS) Magnetic volumes that are potentially overutilized and might benefit from a more efficient configuration. A Magnetic volume is designed for applications with moderate or bursty I/O requirements, and the IOPS rate is not guaranteed. It delivers approximately 100 IOPS on average, with a best-effort ability to burst to hundreds of IOPS. For consistently higher IOPS, you can use a Provisioned IOPS (SSD) volume. For bursty IOPS, you can use a General Purpose (SSD) volume. To get daily utilization metrics, download the report for this check. The detailed report shows a column for each of the last 14 days. If there is no active EBS volume, the cell is empty. If there is  insufficient data to make a reliable measurement, the cell contains \"N/A\". If there is sufficient data, the cell contains the daily median and the percentage of the variance in relation to the median (for example, \"256 / 20%\").",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volume-types.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "8312c521-673e-48df-aca3-ae6a284f7079",
+      "service_name": "ebs",
+      "scenario": "Orphaned EBS snapshots and AMIs consuming storage costs after source volumes deleted",
+      "alert_criteria": "EBS snapshots exist where source volume has been deleted, or AMIs registered without associated running instances for 90+ days",
+      "recommendation_action": "Use AWS Data Lifecycle Manager to automate snapshot retention policies and identify/delete orphaned snapshots and unused AMIs",
+      "risk_detail": "cost",
+      "build_priority": 2,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 1,
+      "recommendation_description_detailed": "COST04-BP05: Orphaned snapshots accumulate when instances are terminated without cleanup processes. These snapshots incur storage costs (~$0.05/GB-month) indefinitely. Implement AWS Data Lifecycle Manager for automated snapshot creation/deletion policies. Identify orphaned snapshots by comparing snapshot volume IDs against active volumes. Review AMIs older than 90 days and deregister unused images along with associated snapshots. Typical organizations can reduce snapshot costs by 40-70% through proper lifecycle management.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST04-BP05 - Enforce data retention policies",
+      "references": [
+        "https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/cost_decomissioning_resources_data_retention.html",
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshot-lifecycle.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T05:13:46.581727+00:00",
+        "updated_at": "2026-06-18T00:00:00Z",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025",
+        "well_architected_metadata_source": "AWS Well-Architected Framework 2026",
+        "detection_status": "planned_resource_metadata",
+        "detector_status": "planned",
+        "support_reason": "Can be evaluated from collected AWS resource, account, configuration, or utilization metadata once a detector is implemented.",
+        "roadmap_phase": "detector-candidate"
+      },
+      "tags": [
+        "ebs-snapshots",
+        "orphaned-resources",
+        "data-lifecycle-manager",
+        "ami-cleanup",
+        "well-architected",
+        "cost04-bp05",
+        "cost_optimization",
+        "planned"
+      ],
+      "pillars": [
+        "cost_optimization"
+      ],
+      "external_refs": {
+        "well_architected": [
+          "COST04-BP05"
+        ]
+      },
+      "compliance_mappings": [
+        "AWS Well-Architected Framework",
+        "COST04-BP05"
+      ]
+    },
+    {
+      "id": "33fc1c4b-3302-4eb4-8f10-a43041c80105",
+      "service_name": "ebs",
+      "scenario": "Max IOPs hit (<32,000)",
+      "alert_criteria": "Condition detected: Max IOPs hit (<32,000)",
+      "recommendation_action": "Increase EBS volume performance grade",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.205593+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "257affcf-d8a7-479b-92b7-80d7d91c59c5",
+      "service_name": "ebs",
+      "scenario": "Clustered Linux powered application needs higher availability (eg Teradata)",
+      "alert_criteria": "Condition detected: Clustered Linux powered application needs higher availability (eg Teradata)",
+      "recommendation_action": "EBS multi-attach (io1/io2 volume family)",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Application must mange concurrent read and write operations",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.205695+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "61ee7b36-d8eb-4bff-a1f5-01e5a4d55c1e",
+      "service_name": "ebs",
+      "scenario": "Need up to 100k IOPS or more throughput on Linux or Windows machine",
+      "alert_criteria": "Condition detected: Need up to 100k IOPS or more throughput on Linux or Windows machine",
+      "recommendation_action": "enable EBS RAID 0",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Good for high performance, High fault tolerance (or already enabled replication) applications",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.205749+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "f12f548d-4986-4309-883e-a3673a5c3ef8",
+      "service_name": "ebs",
+      "scenario": "uaer needs on premise volume data backed up in the cloud",
+      "alert_criteria": "Condition detected: uaer needs on premise volume data backed up in the cloud",
+      "recommendation_action": "use storage (volume) gateway",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "block storage using the iScsi protocol",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.213844+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "service": "sns",
+  "count": 1,
+  "misconfigurations": [
+    {
+      "id": "55db77af-694b-428d-8337-fa10d770e17f",
+      "service_name": "sns",
+      "scenario": "user wants to ensure appropriate subscribers to each SNS topic",
+      "alert_criteria": "Condition detected: user wants to ensure appropriate subscribers to each SNS topic",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.219591+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    }
+  ]
+}

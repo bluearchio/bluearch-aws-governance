@@ -1,0 +1,680 @@
+{
+  "service": "lambda",
+  "count": 21,
+  "misconfigurations": [
+    {
+      "id": "81a5a270-6eef-45f9-921b-593eb7ef6bd6",
+      "service_name": "lambda",
+      "scenario": "time between when the last record in a batch was written to a stream (e.g., Kinesis, DynamoDB) and when Lambda received the batch increases dramatically",
+      "alert_criteria": "Performance metrics indicate optimization opportunity",
+      "recommendation_action": "Optimize resource configuration for improved performance",
+      "risk_detail": "performance",
+      "build_priority": 3,
+      "action_value": 1,
+      "effort_level": 2,
+      "risk_value": 1,
+      "recommendation_description_detailed": "There are a few scenarios that could increase the iterator age:\n    a high execution duration for a function\n    not enough shards in a stream\n    invocation errors\n    insufficient batch size",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "14e59ac7-8087-4489-8073-4bee498c0897",
+      "service_name": "lambda",
+      "scenario": "user wants to limit the time it takes to load and initialize function calls (as the current initialization code runtime takes too long)",
+      "alert_criteria": "**requires x-ray to be enabled**\naverage and percentile of initialization latency is above threshold",
+      "recommendation_action": "provision resserved capacity to reduce cold-start time",
+      "risk_detail": "performance",
+      "build_priority": 2,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 0,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "c8fd0f3c-90c1-45ec-9467-963920497527",
+      "service_name": "lambda",
+      "scenario": "use wants to be made aware of any function throttling that ocurrs",
+      "alert_criteria": "function throttle counts are above threshold",
+      "recommendation_action": "- place limits on how many concurrent \"slices\" (percentage of total concurrency available to your account / region) a single function can have\n- request unreserved (5000) concurrency limit increases (no cost)\n- configure a dlq to capture failure(s)",
+      "risk_detail": "performance, operations",
+      "build_priority": 2,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://aws.amazon.com/premiumsupport/knowledge-center/lambda-troubleshoot-throttling/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "1d169e83-e553-4a67-8796-1c4365265efc",
+      "service_name": "lambda",
+      "scenario": "user wants to avoide lambda function throttling",
+      "alert_criteria": "concurrent executions in a period of time are predicted to exceed to concurrent execution limits (account limit -100)",
+      "recommendation_action": "- place limits on how many concurrent \"slices\" (percentage of total concurrency available to your account / region) a single function can have\n- request unreserved (5000) concurrency limit increases (no cost)\n- configure a dlq to capture failure(s)",
+      "risk_detail": "performance, operations",
+      "build_priority": 2,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 1,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "44183041-c87c-4bf2-ab10-3a593057135a",
+      "service_name": "lambda",
+      "scenario": "lambda function consistently and significantly under memory limits",
+      "alert_criteria": "lambda functions' average memory used is less than threshold in time period",
+      "recommendation_action": "decrease lambda function memory",
+      "risk_detail": "performance",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://aws.amazon.com/about-aws/whats-new/2020/12/aws-lambda-supports-10gb-memory-6-vcpu-cores-lambda-functions/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "f11f43fb-072f-4a2a-9a4a-2851f8bae0aa",
+      "service_name": "lambda",
+      "scenario": "lambda function consistently reaches memory limits",
+      "alert_criteria": "average percent use of concurrency pool is greater than threshold and lambda functions' average memory used is greater than threshold in time period",
+      "recommendation_action": "increase lambda function memory",
+      "risk_detail": "performance",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://aws.amazon.com/about-aws/whats-new/2020/12/aws-lambda-supports-10gb-memory-6-vcpu-cores-lambda-functions/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "51e22636-4dae-4f77-ab58-c4f4961013a2",
+      "service_name": "lambda",
+      "scenario": "AWS Lambda Functions with Excessive Timeouts",
+      "alert_criteria": "Functions where > 10% of invocations end in an error due to a timeout on any given day within the last 7 days.",
+      "recommendation_action": "increase the timeout setting for the function.",
+      "risk_detail": "cost",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Checks for Lambda functions with high timeout rates that may result in high cost. Lambda charges based on execution time for your function and number of requests for your function. Function timeouts result in function errors that may cause retries that incur additional request and execution time charges. For more information, see Monitoring and troubleshooting Lambda applications.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/lambda/latest/dg/lambda-monitoring.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "59b90e10-df31-4a2e-9cd7-1a598eecb2a1",
+      "service_name": "lambda",
+      "scenario": "AWS Lambda Functions with High Error Rates",
+      "alert_criteria": "Functions where > 10% of invocations end in error on any given day within the last 7 days",
+      "recommendation_action": "Consider the following guidelines to reduce errors. Function errors include errors returned by the function's code and errors returned by the function's runtime. To help you troubleshoot Lambda errors, Lambda integrates with services like Amazon CloudWatch and AWS X-Ray. You can use a combination of logs, metrics, alarms, and X-ray tracing to quickly detect and identify issues in your function code, API, or other resources that support your application.",
+      "risk_detail": "cost",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Checks for Lambda functions with high error rates that may result in high cost. Lambda charges based on the number of requests and aggregate execution time for your function. Function errors may cause retries that incur additional charges. Consider the following guidelines to reduce errors. Function errors include errors returned by the function's code and errors returned by the function's runtime. To help you troubleshoot Lambda errors, Lambda integrates with services like Amazon CloudWatch and AWS X-Ray. You can use a combination of logs, metrics, alarms, and X-ray tracing to quickly detect and identify issues in your function code, API, or other resources that support your application.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/lambda/latest/dg/lambda-monitoring.html",
+        "https://docs.aws.amazon.com/lambda/latest/dg/lambda-troubleshooting.html",
+        "https://docs.aws.amazon.com/lambda/latest/dg/invocation-retries.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "d814745d-a655-4612-9d03-07f7236cab77",
+      "service_name": "lambda",
+      "scenario": "user wants to clean up unused or inactive lambda functions",
+      "alert_criteria": "if lambda function is older than threshold or does not have an invocation in the last n days",
+      "recommendation_action": "delete lambda",
+      "risk_detail": "operations",
+      "build_priority": 0,
+      "action_value": 1,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "2cd8897d-8db5-4bde-8476-1edbe7f97894",
+      "service_name": "lambda",
+      "scenario": "user needs serverless (lambda) tracing functionality",
+      "alert_criteria": "user does not have x-ray tracing installed",
+      "recommendation_action": "enable x-ray",
+      "risk_detail": "operations",
+      "build_priority": 0,
+      "action_value": 1,
+      "effort_level": 1,
+      "risk_value": 0,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "b2c8d3e9-4f1a-5b6c-9d7e-1a8f4b5c6d7e",
+      "service_name": "lambda",
+      "scenario": "Lambda functions with provisioned concurrency enabled for workloads with variable or infrequent traffic",
+      "alert_criteria": "Lambda functions with provisioned concurrency >0, or provisioned concurrency utilization <50% over 30 days, or non-latency-sensitive workloads using provisioned concurrency",
+      "recommendation_action": "Evaluate necessity of provisioned concurrency - disable for non-latency-sensitive workloads, use Application Auto Scaling for provisioned concurrency to match traffic patterns, or migrate to on-demand invocation",
+      "risk_detail": "cost",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Lambda provisioned concurrency eliminates cold starts but costs 10-20x more than on-demand ($0.000009722/GB-second provisioned vs $0.0000166667/GB-second on-demand). Only justified for: 1) latency-sensitive user-facing APIs requiring <50ms, 2) consistently high traffic. Most workloads should use on-demand. If provisioned concurrency needed: use Application Auto Scaling to schedule (disable nights/weekends), or scale based on traffic. Example: Function with 1GB memory, 100 provisioned concurrency 24/7 = $700/month vs on-demand for same invocations = $50/month. Audit provisioned concurrency monthly for utilization.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework - Provisioned concurrency often over-used due to cold start concerns",
+      "references": [
+        "https://docs.aws.amazon.com/lambda/latest/dg/provisioned-concurrency.html",
+        "https://aws.amazon.com/lambda/pricing/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2025-11-06T17:41:02.278720+00:00",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025"
+      },
+      "tags": [
+        "lambda-provisioned-concurrency",
+        "lambda-optimization",
+        "cold-start",
+        "serverless-cost"
+      ]
+    },
+    {
+      "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+      "service_name": "lambda",
+      "scenario": "Lambda functions making synchronous calls to external services without circuit breaker implementation",
+      "alert_criteria": "Lambda functions with >20% timeout errors when calling downstream services, or Lambda functions with synchronous external API calls without fault tolerance",
+      "recommendation_action": "Implement circuit breaker pattern: 1) Use Step Functions with error handling, 2) Add circuit breaker logic in Lambda using ElastiCache/DynamoDB for state, 3) Configure Lambda reserved concurrency to prevent cascade failures",
+      "risk_detail": "reliability, performance, cost",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "Without circuit breaker pattern, Lambda functions repeatedly attempt to call unavailable downstream services, causing cascading failures and wasted costs. Circuit breaker detects failure threshold (e.g., 50% errors in 10 attempts), opens circuit to fail fast for 30 seconds, then half-opens to test recovery. AWS implementation: Lambda + DynamoDB for state tracking, or AWS Resilience Hub. Cost impact: Without circuit breaker, failed calls waste execution time; with fast-fail pattern, costs reduced by 80-90% during downstream outages.",
+      "category": "compute",
+      "architectural_patterns": [
+        {
+          "pattern_name": "Circuit Breaker",
+          "relationship": "missing_implementation",
+          "description": "No circuit breaker logic to prevent repeated calls to failing downstream services"
+        }
+      ],
+      "pattern_implementation_guidance": "Implement using: 1) Lambda Layer with circuit breaker library (pybreaker for Python, opossum for Node.js), 2) DynamoDB table to store circuit state (service_name, failure_count, circuit_state, last_failure_time), 3) Lambda environment variables for thresholds (failure_threshold=5, timeout=30s), 4) CloudWatch alarms when circuit opens. Example: pybreaker library with @breaker decorator.",
+      "output_notes": null,
+      "notes": "AWS Prescriptive Guidance - Circuit Breaker Pattern",
+      "references": [
+        "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/circuit-breaker.html",
+        "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+        "https://docs.aws.amazon.com/resilience-hub/latest/userguide/what-is.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T20:44:23.794745+00:00",
+        "updated_at": "2025-11-06T20:44:23.794745+00:00",
+        "contributors": [
+          "pattern-integration-2025"
+        ],
+        "source": "AWS Prescriptive Guidance - Circuit Breaker Pattern"
+      },
+      "tags": [
+        "pattern:circuit-breaker",
+        "resilience-pattern",
+        "fault-tolerance",
+        "cascade-failure-prevention"
+      ],
+      "detection_methods": [
+        {
+          "method": "CloudWatch Metric",
+          "details": "Lambda Errors metric > 20% for functions with external dependencies"
+        }
+      ],
+      "remediation_examples": [
+        {
+          "language": "python",
+          "code": "from pybreaker import CircuitBreaker\nbreaker = CircuitBreaker(fail_max=5, timeout_duration=30)\n\n@breaker\ndef call_external_service():\n    response = requests.get('https://api.example.com/data')\n    return response.json()\n\ndef lambda_handler(event, context):\n    try:\n        data = call_external_service()\n        return {'statusCode': 200, 'body': data}\n    except CircuitBreakerError:\n        return {'statusCode': 503, 'body': 'Service temporarily unavailable'}",
+          "description": "Python Lambda with pybreaker library - 5 failure threshold, 30-second timeout"
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-a7b8-4901-c234-56789abcdef0",
+      "service_name": "lambda",
+      "scenario": "Lambda functions making external API calls without retry logic or using fixed-interval retries",
+      "alert_criteria": "Lambda functions with throttling errors from external APIs (429 responses), timeout errors >5%, or no SDK retry configuration",
+      "recommendation_action": "Implement Retry with Exponential Backoff: 1) Use AWS SDK built-in retry (Standard mode: 3 attempts, exponential backoff), 2) Add jitter to prevent thundering herd, 3) Configure Lambda reserved concurrency, 4) Use Step Functions for complex retry scenarios",
+      "risk_detail": "reliability, cost, performance",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Fixed-interval retries or no retries waste Lambda execution time and potentially overwhelm recovering services. Exponential backoff: 1st retry after 1s, 2nd after 2s, 3rd after 4s (with jitter ±50%). AWS SDK default provides 3 retries with exponential backoff. Most transient failures (network timeouts, 429/503 errors) succeed on retry. Without retry: 10% transient failures = 100K errors per 1M invocations. With backoff retry: 95K recovered, 5K permanent failures, costs minimal extra execution time vs massive improvement in reliability.",
+      "category": "compute",
+      "architectural_patterns": [
+        {
+          "pattern_name": "Retry with Exponential Backoff",
+          "relationship": "missing_implementation",
+          "description": "No retry logic or fixed-interval retries causing thundering herd and service degradation"
+        }
+      ],
+      "pattern_implementation_guidance": "Configure AWS SDK retry mode in Lambda environment variables: AWS_RETRY_MODE=standard, AWS_MAX_ATTEMPTS=3. For custom retries: implement exponential backoff with jitter (delay = min(max_delay, base_delay * 2^attempt * random(0.5, 1.5))). Only retry transient errors (429, 500, 502, 503, 504, timeouts). For Step Functions: use Retry field with BackoffRate=2.0, MaxAttempts=3.",
+      "output_notes": null,
+      "notes": "AWS Builders Library - Timeouts, Retries, and Backoff with Jitter",
+      "references": [
+        "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/retry-backoff.html",
+        "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+        "https://docs.aws.amazon.com/general/latest/gr/api-retries.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T20:44:23.794745+00:00",
+        "updated_at": "2025-11-06T20:44:23.794745+00:00",
+        "contributors": [
+          "pattern-integration-2025"
+        ],
+        "source": "AWS Prescriptive Guidance - Retry with Backoff Pattern"
+      },
+      "tags": [
+        "pattern:retry-backoff",
+        "resilience-pattern",
+        "transient-error-handling",
+        "api-integration"
+      ],
+      "detection_methods": [
+        {
+          "method": "CloudWatch Logs Insights",
+          "details": "Query Lambda logs for HTTP 429/503 responses or timeout errors"
+        }
+      ],
+      "remediation_examples": [
+        {
+          "language": "python",
+          "code": "from botocore.config import Config\nimport boto3\n\n# Configure AWS SDK with retry\nconfig = Config(retries={'mode': 'adaptive', 'max_attempts': 5})\ndynamodb = boto3.client('dynamodb', config=config)",
+          "description": "Python Lambda with AWS SDK adaptive retry configuration"
+        }
+      ]
+    },
+    {
+      "id": "d4e5f6a7-b8c9-4012-d345-6789abcdef01",
+      "service_name": "lambda",
+      "scenario": "Lambda functions processing variable workload spikes synchronously without message queue buffering",
+      "alert_criteria": "Lambda throttling errors >100/hour, API Gateway 5xx errors during traffic spikes, or direct synchronous invocation of compute-intensive functions",
+      "recommendation_action": "Implement Queue-Based Load Leveling: 1) Place SQS queue between API Gateway and Lambda, 2) Configure API Gateway to send messages to SQS, 3) Set Lambda as SQS consumer with batch size 10-100, 4) Configure DLQ for failed messages, 5) Monitor queue depth",
+      "risk_detail": "reliability, performance, cost",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Synchronous processing fails during traffic spikes (10x spike = 90% failures). Queue-Based Load Leveling decouples request acceptance from processing: API Gateway succeeds immediately (200 OK after SQS write), Lambda processes at sustainable rate. Benefits: 1) No lost requests during spikes, 2) Consistent processing rate, 3) Auto-scaling based on queue depth. Example: E-commerce flash sale - 10K requests/sec spike vs 1K/sec capacity. Without queue: 9K failures. With SQS: all accepted, processed within SLA. Cost: SQS = $0.40 per million requests.",
+      "category": "messaging",
+      "architectural_patterns": [
+        {
+          "pattern_name": "Queue-Based Load Leveling",
+          "relationship": "missing_implementation",
+          "description": "Direct synchronous processing without queue buffer for variable workloads"
+        }
+      ],
+      "pattern_implementation_guidance": "Create SQS queue (Standard for throughput, FIFO for ordering), create DLQ, update API Gateway integration to SQS (Action=SendMessage), create Lambda trigger from SQS with BatchSize=10, set Lambda reserved concurrency to control rate, configure CloudWatch alarms: ApproximateAgeOfOldestMessage >300s.",
+      "output_notes": null,
+      "notes": "AWS Architecture - Queue-Based Load Leveling Pattern",
+      "references": [
+        "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html",
+        "https://aws.amazon.com/blogs/compute/understanding-how-aws-lambda-scales-with-amazon-sqs-standard-queues/",
+        "https://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-sqs.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T20:44:23.794745+00:00",
+        "updated_at": "2025-11-06T20:44:23.794745+00:00",
+        "contributors": [
+          "pattern-integration-2025"
+        ],
+        "source": "AWS Architecture - Queue-Based Load Leveling Pattern"
+      },
+      "tags": [
+        "pattern:queue-load-leveling",
+        "resilience-pattern",
+        "sqs",
+        "traffic-spike-handling",
+        "decoupling"
+      ]
+    },
+    {
+      "id": "e5f6a7b8-c9d0-4123-e456-789abcdef012",
+      "service_name": "lambda",
+      "scenario": "Multiple Lambda functions sharing unreserved concurrency pool without isolation",
+      "alert_criteria": "Account-level Lambda throttling, critical functions throttled due to non-critical functions consuming concurrency, or no reserved concurrency configured for production workloads",
+      "recommendation_action": "Implement Bulkhead pattern: 1) Allocate reserved concurrency to critical functions (payment=200, auth=150), 2) Leave unreserved pool for non-critical, 3) Monitor per-function concurrency, 4) Use Application Auto Scaling for dynamic adjustment",
+      "risk_detail": "reliability, operations, performance",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 1,
+      "risk_value": 3,
+      "recommendation_description_detailed": "Bulkhead pattern prevents single function from exhausting shared concurrency pool (default 1000 per account). Without bulkheads: batch job consuming 900 executions throttles payment processing (revenue loss). With reserved concurrency: payment=200 reserved, batch=100 reserved, 700 unreserved. If batch spikes, only impacts unreserved pool. Reserved concurrency is FREE, only pay for actual executions. Critical for: multi-tenant systems, mixed criticality workloads, production+development in same account.",
+      "category": "compute",
+      "architectural_patterns": [
+        {
+          "pattern_name": "Bulkhead",
+          "relationship": "missing_implementation",
+          "description": "No isolation between Lambda functions using shared concurrency pool"
+        }
+      ],
+      "pattern_implementation_guidance": "Identify critical vs non-critical functions, calculate required concurrency (avg * 1.5 + buffer), set reserved concurrency: aws lambda put-function-concurrency --function-name critical-api --reserved-concurrent-executions 200, monitor ConcurrentExecutions metric, set CloudWatch alarms when usage >80% of reserved.",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework - Bulkhead Pattern for Resource Isolation",
+      "references": [
+        "https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html",
+        "https://aws.amazon.com/blogs/compute/managing-aws-lambda-function-concurrency/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T20:44:23.794745+00:00",
+        "updated_at": "2025-11-06T20:44:23.794745+00:00",
+        "contributors": [
+          "pattern-integration-2025"
+        ],
+        "source": "AWS Well-Architected Framework - Bulkhead Pattern"
+      },
+      "tags": [
+        "pattern:bulkhead",
+        "resilience-pattern",
+        "lambda-concurrency",
+        "resource-isolation",
+        "noisy-neighbor"
+      ],
+      "remediation_examples": [
+        {
+          "language": "aws-cli",
+          "code": "aws lambda put-function-concurrency --function-name payment-processing --reserved-concurrent-executions 200",
+          "description": "Set reserved concurrency for critical function isolation"
+        }
+      ]
+    },
+    {
+      "id": "37841661-4dc1-4fe6-a5f5-3f95013da436",
+      "service_name": "lambda",
+      "scenario": "lambda functions should not be used",
+      "alert_criteria": "https://www.serverless.com/aws-lambda#limitations",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "https://www.serverless.com/aws-lambda#limitations",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.204573+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "64a6e315-cfef-4450-a761-247576cbe77e",
+      "service_name": "lambda",
+      "scenario": "lambda function(s) has/have not been invoked in a long time",
+      "alert_criteria": "if lambda has not been invoked in [1 YEAR], recommend deletion",
+      "recommendation_action": "delete lambda",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "waste removal",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.214422+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "1f780989-b697-4817-b38c-dee807324c6b",
+      "service_name": "lambda",
+      "scenario": "processes that are controlled / run by lambda function are performing poorly",
+      "alert_criteria": "ram, cpu, or networking performance is not enough",
+      "recommendation_action": "increase ram",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "increasing ram of a lambda function also increases the cpu and network performance",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.215498+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "34fb31df-b922-42a7-a462-c684bda929a4",
+      "service_name": "lambda",
+      "scenario": "user has an IoT system (e.g. AWS edge) and wants to filter requests before they get to the application",
+      "alert_criteria": "Condition detected: user has an IoT system (e.g. AWS edge) and wants to filter requests before they get to the applicati",
+      "recommendation_action": "deploy a CDN with cloudfront along side your lambda functions",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "i.e. use lambda to customize cdn content",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.215651+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "5539e36a-7ff0-4feb-9edf-02a6a51ebd51",
+      "service_name": "lambda",
+      "scenario": "user wants to prevent lambda functions with admin priviliges",
+      "alert_criteria": "Condition detected: user wants to prevent lambda functions with admin priviliges",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.217786+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "24a0eea7-9e43-4549-9c5d-17d1ddcaa4ef",
+      "service_name": "lambda",
+      "scenario": "user wants to ensure that lambda functions do not share the same AWS iam execution role",
+      "alert_criteria": "Condition detected: user wants to ensure that lambda functions do not share the same AWS iam execution role",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.218314+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    }
+  ]
+}

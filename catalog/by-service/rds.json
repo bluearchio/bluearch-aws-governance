@@ -1,0 +1,662 @@
+{
+  "service": "rds",
+  "count": 22,
+  "misconfigurations": [
+    {
+      "id": "08c3c3cd-25d9-4cb6-8c30-926c823276a8",
+      "service_name": "rds",
+      "scenario": "Amazon Relational Database Service (RDS) Reserved Instance Optimization",
+      "alert_criteria": "Optimizing the purchase of RDS Reserved Instances can help reduce costs.",
+      "recommendation_action": "See the Cost Explorer page for more detailed recommendations, customization options (e.g. look-back period, payment option, etc.) and to purchase RDS Reserved Instances.",
+      "risk_detail": "cost",
+      "build_priority": 2,
+      "action_value": 1,
+      "effort_level": 2,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Checks your usage of RDS and provides recommendations on purchase of Reserved Instances to help reduce costs incurred from using RDS On-Demand. AWS generates these recommendations by analyzing your On-Demand usage for the past 30 days. We then simulate every combination of reservations in the generated category of usage in order to identify the best number of each type of Reserved Instance to purchase to maximize your savings. This check covers recommendations based on partial upfront payment option with 1-year or 3-year commitment. This check is not available to accounts linked in Consolidated Billing. Recommendations are only available for the Paying Account.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "3afeb36c-4c09-400f-8f70-13314ff8d578",
+      "service_name": "rds",
+      "scenario": "Amazon RDS Idle DB Instances",
+      "alert_criteria": "An active DB instance has not had a connection in the last 7 days.",
+      "recommendation_action": "Consider taking a snapshot of the idle DB instance and then either stopping it or deleting it. Stopping the DB instance removes some of the costs for it, but does not remove storage costs. A stopped instance keeps all automated backups based upon the configured retention period. Stopping a DB instance usually incurs additional costs when compared to deleting the instance and then retaining only the final snapshot",
+      "risk_detail": "cost",
+      "build_priority": 0,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "Checks the configuration of your Amazon Relational Database Service (Amazon RDS) for any DB instances that appear to be idle. If a DB instance has not had a connection for a prolonged period of time, you can delete the instance to reduce costs. If persistent storage is needed for data on the instance, you can use lower-cost options such as taking and retaining a DB snapshot. Manually created DB snapshots are retained until you delete them. Data for Amazon RDS instances created in the Asia Pacific (Seoul) region (sa-east-1) is not available. We are working to fix this issue as soon as possible",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "a1f5645b-0bce-475a-b036-d34b9abd5dbb",
+      "service_name": "rds",
+      "scenario": "RDS instances are running on previous generations",
+      "alert_criteria": "RDS instances are running on previous generations",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "c0764b9f-5241-46c5-af3f-3bcf30721fec",
+      "service_name": "rds",
+      "scenario": "user does not want RDS to have public interface",
+      "alert_criteria": "Condition detected: user does not want RDS to have public interface",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "d5daba29-69b4-4a46-8223-73ece5a7b5ef",
+      "service_name": "rds",
+      "scenario": "rightsize RDS instances",
+      "alert_criteria": "Condition detected: rightsize RDS instances",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "4a77b3fb-647d-4f79-8605-28d7ab946ad2",
+      "service_name": "rds",
+      "scenario": "user wants the rds storage to be encrypted",
+      "alert_criteria": "Condition detected: user wants the rds storage to be encrypted",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "a4d8f3e1-9c2b-4f7e-8a5d-6b1c9e3f2a4d",
+      "service_name": "rds",
+      "scenario": "RDS instances with over-provisioned storage capacity without auto-scaling enabled",
+      "alert_criteria": "RDS instances with <40% storage utilization, or storage manually increased multiple times, or auto-scaling not enabled",
+      "recommendation_action": "Enable RDS Storage Auto Scaling with appropriate maximum storage threshold to automatically scale storage as needed, reducing over-provisioning waste",
+      "risk_detail": "cost",
+      "build_priority": 2,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "RDS storage is billed based on provisioned capacity, not actual usage. Organizations often over-provision (e.g., 1TB when only 200GB used) to avoid manual scaling operations. RDS Storage Auto Scaling automatically increases storage capacity when free space falls below 10% or 5GB threshold, preventing over-provisioning. Configure maximum storage limit based on anticipated growth. Supports GP2, GP3, and Provisioned IOPS storage. Scaling occurs with zero downtime. Typical savings: 30-50% of RDS storage costs by right-sizing initial allocation.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST06 - Right-size RDS storage dynamically",
+      "references": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.StorageTypes.html",
+        "https://aws.amazon.com/rds/features/storage/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2025-11-06T17:41:02.278720+00:00",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025"
+      },
+      "tags": [
+        "rds-storage",
+        "auto-scaling",
+        "storage-optimization",
+        "rightsizing"
+      ]
+    },
+    {
+      "id": "b3c7e2d1-8a4f-4b6e-9c5d-7e1a8f3b2c4d",
+      "service_name": "rds",
+      "scenario": "RDS instances using GP2 storage instead of cost-effective GP3 storage type",
+      "alert_criteria": "RDS instances with gp2 storage type, especially those with low IOPS requirements (<3000 IOPS)",
+      "recommendation_action": "Migrate RDS storage from GP2 to GP3 for 20% cost savings with same or better performance, using AWS console or modify-db-instance CLI command",
+      "risk_detail": "cost, performance",
+      "build_priority": 2,
+      "action_value": 3,
+      "effort_level": 1,
+      "risk_value": 1,
+      "recommendation_description_detailed": "GP3 storage offers 20% lower cost than GP2 with better baseline performance (3000 IOPS and 125 MB/s regardless of size vs GP2 performance scaling with size). GP3 pricing: $0.08/GB-month vs GP2 $0.10/GB-month. Migration is online with no downtime for most engines. GP3 allows independent IOPS and throughput provisioning (cost-effective for workloads needing high throughput but not high IOPS). Best candidates: databases >100GB where GP2 over-provisions performance. Calculate savings: (current_storage_GB * $0.02) * 12 months.",
+      "category": "cost",
+      "output_notes": null,
+      "notes": "AWS Well-Architected Framework COST05 - GP3 is newer, faster, and 20% cheaper than GP2",
+      "references": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html",
+        "https://aws.amazon.com/rds/features/storage/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T17:41:02.278720+00:00",
+        "updated_at": "2025-11-06T17:41:02.278720+00:00",
+        "contributors": [
+          "aws-well-architected-2025"
+        ],
+        "source": "AWS Well-Architected Framework Cost Optimization Pillar 2025"
+      },
+      "tags": [
+        "rds-storage",
+        "gp3",
+        "gp2-migration",
+        "storage-type-optimization"
+      ]
+    },
+    {
+      "id": "b2c3d4e5-f6a7-4890-b123-456789abcdef",
+      "service_name": "rds",
+      "scenario": "Database queries repeated without caching layer implementation",
+      "alert_criteria": "RDS DatabaseConnections >80% of max, identical SELECT queries >1000/min, or query response time >100ms for cacheable data",
+      "recommendation_action": "Implement Cache-Aside pattern: 1) Deploy ElastiCache Redis/Memcached cluster, 2) Modify application to check cache before database, 3) Set appropriate TTL (5min for product catalog, 1hr for reference data), 4) Monitor cache hit rate (target >80%)",
+      "risk_detail": "performance, cost, reliability",
+      "build_priority": 1,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Cache-Aside pattern reduces database load by 70-95% for read-heavy workloads. Application checks cache first; on miss, queries database and populates cache. Without caching: 10,000 reads/sec on RDS = $500/month + performance degradation. With ElastiCache: cache.r6g.large = $175/month + 95% cache hit rate = $200 total vs $500 (60% savings). Additional benefits: reduced RDS instance size, improved response time (1ms cache vs 50ms database). Critical for: product catalogs, user profiles, reference data, API responses.",
+      "category": "database",
+      "architectural_patterns": [
+        {
+          "pattern_name": "Cache-Aside",
+          "relationship": "missing_implementation",
+          "description": "No caching layer between application and database for frequently accessed data"
+        }
+      ],
+      "pattern_implementation_guidance": "Create ElastiCache Redis cluster (Multi-AZ for production), update application connection string, implement cache access pattern: GET from cache -> if miss -> GET from DB -> SET in cache with TTL, use consistent cache key format (service:entity:id), handle cache failures gracefully (fallback to DB), set CloudWatch alarms for cache hit rate <70%.",
+      "output_notes": null,
+      "notes": "AWS Database Caching Strategies - Cache-Aside Pattern",
+      "references": [
+        "https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/caching-patterns.html",
+        "https://aws.amazon.com/caching/best-practices/",
+        "https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/Strategies.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-06T20:44:23.794745+00:00",
+        "updated_at": "2025-11-06T20:44:23.794745+00:00",
+        "contributors": [
+          "pattern-integration-2025"
+        ],
+        "source": "AWS Database Caching Strategies - Cache-Aside Pattern"
+      },
+      "tags": [
+        "pattern:cache-aside",
+        "performance-pattern",
+        "elasticache",
+        "database-optimization",
+        "read-heavy-workload"
+      ],
+      "detection_methods": [
+        {
+          "method": "RDS Performance Insights",
+          "details": "Top SQL queries showing identical SELECT statements with >1000 executions/minute"
+        }
+      ],
+      "remediation_examples": [
+        {
+          "language": "python",
+          "code": "import boto3\nimport json\nfrom redis import Redis\n\nredis_client = Redis(host='elasticache-endpoint', port=6379)\n\ndef get_user_profile(user_id):\n    cache_key = f'user:profile:{user_id}'\n    cached = redis_client.get(cache_key)\n    if cached:\n        return json.loads(cached)\n    \n    # Cache miss - query database\n    result = query_database(user_id)\n    redis_client.setex(cache_key, 300, json.dumps(result))  # 5-min TTL\n    return result",
+          "description": "Python implementation of Cache-Aside with ElastiCache Redis and RDS"
+        }
+      ]
+    },
+    {
+      "id": "b5d48d1f-0c91-4abb-97cb-fb1c04bb59ba",
+      "service_name": "rds",
+      "scenario": "provisioned aurora db or serverless v1",
+      "alert_criteria": "Condition detected: provisioned aurora db or serverless v1",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "determines, based on predictabilty of the workloads, which db type should be used",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.204114+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "2ba334ec-3d39-40fd-9753-a7efec8e3091",
+      "service_name": "rds",
+      "scenario": "reporting / analytics team wants to generate insights from your production relational database (e.g. RDS) but your production database is already taking on a normal load and you do not want to risk performance declines",
+      "alert_criteria": "Condition detected: reporting / analytics team wants to generate insights from your production relational database (e.g.",
+      "recommendation_action": "create a read replica to run the analyitcs workloads",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.207223+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "3660d10c-dcb8-4539-a478-17568ea89eba",
+      "service_name": "rds",
+      "scenario": "high cpu / write frequency to aurora read replicas are causing performance issues, or you would like to specify custom endpoints for analytical queries",
+      "alert_criteria": "Condition detected: high cpu / write frequency to aurora read replicas are causing performance issues, or you would like",
+      "recommendation_action": "create custom endpoints to query specific subsets of your aurora replicas",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "you know there are various sizes of aurora read replicas and you want to separate workloads by type",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.207694+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "615f34d8-5c68-4f9e-bb45-69e66714b2cf",
+      "service_name": "rds",
+      "scenario": "client wants ml predictins to your applications via sql",
+      "alert_criteria": "Condition detected: client wants ml predictins to your applications via sql",
+      "recommendation_action": "aurora machine learning with sagemaker or amazon comprehend",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.207804+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "daff4201-ab90-42a9-a503-17ec9374a89e",
+      "service_name": "rds",
+      "scenario": "rds struggles to keep up with demand of users on the website. users mostly read news / content and we (the company) do not post news / content often",
+      "alert_criteria": "Condition detected: rds struggles to keep up with demand of users on the website. users mostly read news / content and w",
+      "recommendation_action": "scale reads with ElastiCache or RDS Read Replicas",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.208267+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "e6108cb9-4ece-4882-b763-fa29ec6b1bd3",
+      "service_name": "rds",
+      "scenario": "user is experiencing poor performance on the website / application",
+      "alert_criteria": "Condition detected: user is experiencing poor performance on the website / application",
+      "recommendation_action": "scale reads using a write through architecture, leveraging elasticache (or dynamo) and RDS",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": "less traffic on rds (decreases CPU usage) and improves performance in parallel; requires cache maintenance now, must be implemented on the application side (more costly)",
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.211216+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "b0c84bfb-87ed-4bc0-8cd5-76289fc81aa1",
+      "service_name": "rds",
+      "scenario": "user is experiencing poor performance on the website / application",
+      "alert_criteria": "Condition detected: user is experiencing poor performance on the website / application",
+      "recommendation_action": "scale reads by increasing RDS read replicas (up to a maximum of 5)",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.211297+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "67c7713f-5866-4e0e-bd65-2fd445775878",
+      "service_name": "rds",
+      "scenario": "user wants multi az disaster recovery for their application",
+      "alert_criteria": "Condition detected: user wants multi az disaster recovery for their application",
+      "recommendation_action": "if users application leverages RDS and Elasticasche, ensure multi-az is enabled for both applications",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "this assumes the user is using RDS and/or elasticache to manage applicaiton state",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.211408+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "f70af24d-8ea3-4434-a18a-7f4ceb78c1d3",
+      "service_name": "rds",
+      "scenario": "customer needs a database but is not sure which one to select or what to configure",
+      "alert_criteria": "Heavy writes / simple queries = NoSQL",
+      "recommendation_action": "use amazon dynamo db",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "read-heavy, write-heavy, or balanced workload? How many reads and writes are you going to need to per second? How will these values change if the numbers of users increases? How much data will you need to store? For how long? How quickly will this grow? Is there an upper limit in the near future? What are the sizes of each object? How will these objects be accessed? What are your requirements in terms of durability of data? Is this data store your source of truth? What are your latency requirements? How many concurrent users do you need to support? What is your data model and how are you going to query the data? Etc.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.214805+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "02c10f83-1d4e-4889-b707-a7a564032af3",
+      "service_name": "rds",
+      "scenario": "customer needs a database but is not sure which one to select or what to configure",
+      "alert_criteria": "Heavy reads / complex queries and joins = SQL",
+      "recommendation_action": "use amaon RDS",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "(continuation from this)",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.214905+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "4dd1933d-e014-4a2f-b044-497c050c5983",
+      "service_name": "rds",
+      "scenario": "RDS Proxy subnets have insufficient available IP addresses causing connection failures and blocking security patches",
+      "alert_criteria": "Amazon RDS event ID RDS-EVENT-0243 is generated indicating insufficient available IP addresses in subnets configured for RDS Proxy. Available IP addresses in RDS Proxy subnets fall below the minimum reservation threshold for the database instance class size.",
+      "recommendation_action": "Monitor RDS Proxy subnet IP utilization using CloudWatch and RDS events. When IP address exhaustion is detected, expand VPC CIDR ranges, create new subnets with adequate address space, and migrate the RDS Proxy to the new subnet configuration using a parallel deployment approach. For long-term resolution, consider migrating to IPv6 if workloads support it. Plan subnet sizing based on the IP reservation requirements documented for each RDS instance class.",
+      "risk_detail": "security, reliability, performance",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Amazon RDS Proxy dynamically adjusts its capacity based on database instance size, number of registered instances, and scaling operations. When subnets lack sufficient available IP addresses, RDS Proxy performance degrades through increased query latency and connection failures. More critically, IP address exhaustion prevents the Amazon RDS team from applying essential OS security patches to Proxy servers, exposing infrastructure to security vulnerabilities. It also blocks new feature availability for the proxy. Organizations should proactively monitor subnet IP utilization and plan capacity based on the minimum IP reservation requirements documented for each database instance class. The RDS-EVENT-0243 event provides an early warning signal before critical impact occurs.",
+      "category": "database",
+      "references": [
+        "https://aws.amazon.com/blogs/database/managing-ip-address-exhaustion-for-amazon-rds-proxy/"
+      ],
+      "metadata": {
+        "created_at": "2026-02-09T05:38:18Z",
+        "updated_at": "2026-02-09T05:38:18Z",
+        "contributors": [
+          "ingest-pipeline"
+        ],
+        "source": "AWS Database Blog"
+      },
+      "tags": [
+        "rds",
+        "rds-proxy",
+        "networking",
+        "ip-exhaustion",
+        "vpc",
+        "subnet-planning",
+        "capacity"
+      ]
+    },
+    {
+      "id": "5c3d02fe-0ca2-45fe-be46-ef6ac1c678be",
+      "service_name": "rds",
+      "scenario": "RDS for SQL Server multi-tenant instances expose all database names to authenticated users by default",
+      "alert_criteria": "RDS for SQL Server instances hosting multiple tenant databases have not used the rds_manage_view_db_permission stored procedure to restrict database name visibility per login. All authenticated users can view all database names in the instance.",
+      "recommendation_action": "Use the Amazon RDS for SQL Server custom stored procedure msdb.dbo.rds_manage_view_db_permission to deny database visibility for tenant-specific logins. Apply this procedure to each tenant login so they can only see their own database names while maintaining full access to their authorized databases. Validate the configuration by confirming restricted visibility and document the process for new tenant onboarding.",
+      "risk_detail": "security",
+      "build_priority": 2,
+      "action_value": 2,
+      "effort_level": 1,
+      "risk_value": 2,
+      "recommendation_description_detailed": "By default, SQL Server's PUBLIC role allows all authenticated users to view every database name on the instance. In multi-tenant environments where database names may contain or reveal tenant identifiers, this default behavior creates an information disclosure risk. Tenants can discover the existence of other tenants, potentially revealing business relationships, customer names, or organizational structure. For ISVs and SaaS providers hosting multiple customer databases on shared RDS for SQL Server instances, this is a significant concern that can violate data isolation requirements and tenant confidentiality expectations. The RDS-specific stored procedure rds_manage_view_db_permission provides per-login control over database visibility without requiring server-level permission changes that are not available in the managed RDS environment.",
+      "category": "database",
+      "references": [
+        "https://aws.amazon.com/blogs/database/control-database-name-visibility-in-amazon-rds-for-sql-server-instances/"
+      ],
+      "metadata": {
+        "created_at": "2026-02-09T05:38:18Z",
+        "updated_at": "2026-02-09T05:38:18Z",
+        "contributors": [
+          "ingest-pipeline"
+        ],
+        "source": "AWS Database Blog"
+      },
+      "tags": [
+        "rds",
+        "sql-server",
+        "multi-tenant",
+        "information-disclosure",
+        "tenant-isolation",
+        "saas"
+      ]
+    },
+    {
+      "id": "edc58eac-b68f-45ff-9905-28165178d256",
+      "service_name": "rds",
+      "scenario": "Amazon RDS for MySQL or Aurora MySQL audit logs are not exported to S3 for long-term retention and compliance analysis",
+      "alert_criteria": "RDS for MySQL or Aurora MySQL instances have audit logging enabled but no automated export mechanism to Amazon S3 is configured. Audit logs remain only in CloudWatch Logs without long-term archival or structured analysis capability.",
+      "recommendation_action": "Implement automated export of MySQL audit logs to Amazon S3 using either batch processing (CloudWatch Logs export tasks triggered by EventBridge on a schedule) or real-time processing (Amazon Data Firehose subscribed to CloudWatch Logs). Configure S3 lifecycle policies for cost-effective long-term retention. Set up Athena tables for SQL-based audit log querying and consider QuickSight dashboards for ongoing monitoring.",
+      "risk_detail": "security, operations",
+      "build_priority": 2,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Database audit logs are essential for security investigations, compliance reporting, and tracking user activities including queries executed, data changes, and authentication attempts. While RDS for MySQL and Aurora MySQL provide built-in audit logging to CloudWatch Logs, retaining logs solely in CloudWatch is not cost-effective for long-term storage and limits analysis capabilities. Exporting audit logs to S3 enables durable, cost-effective retention with integration into analytics tools like Athena for ad-hoc SQL queries, QuickSight for visual dashboards, and Lambda/SNS for automated alerting on suspicious patterns such as failed login spikes or after-hours access to sensitive tables. This is a requirement for multiple regulatory frameworks including PCI DSS, HIPAA, and SOX, which mandate retention and regular analysis of database audit logs.",
+      "category": "database",
+      "references": [
+        "https://aws.amazon.com/blogs/database/automate-the-export-of-amazon-rds-for-mysql-or-amazon-aurora-mysql-audit-logs-to-amazon-s3-with-batching-or-near-real-time-processing/"
+      ],
+      "metadata": {
+        "created_at": "2026-02-09T05:38:18Z",
+        "updated_at": "2026-02-09T05:38:18Z",
+        "contributors": [
+          "ingest-pipeline"
+        ],
+        "source": "AWS Database Blog"
+      },
+      "tags": [
+        "rds",
+        "aurora",
+        "mysql",
+        "audit-logs",
+        "compliance",
+        "s3-export",
+        "long-term-retention"
+      ]
+    }
+  ]
+}

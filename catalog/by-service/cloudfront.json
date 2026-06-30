@@ -1,0 +1,368 @@
+{
+  "service": "cloudfront",
+  "count": 13,
+  "misconfigurations": [
+    {
+      "id": "937fff55-6361-4546-a3be-9b4769c904e4",
+      "service_name": "cloudfront",
+      "scenario": "CloudFront Header Forwarding and Cache Hit Ratio",
+      "alert_criteria": "One or more request headers that CloudFront forwards to your origin might significantly reduce your cache hit ratio.",
+      "recommendation_action": "Consider whether the request headers provide enough benefit to justify the negative effect on the cache hit ratio. If your origin returns the same object regardless of the value of a given header, we recommend that you don't configure CloudFront to forward that header to the origin.",
+      "risk_detail": "performance",
+      "build_priority": 2,
+      "action_value": 1,
+      "effort_level": 2,
+      "risk_value": 1,
+      "recommendation_description_detailed": "Checks the HTTP request headers that CloudFront currently receives from the client and forwards to your origin server. Some headers, such as Date or User-Agent, significantly reduce the cache hit ratio (the proportion of requests that are served from a CloudFront edge cache). This increases the load on your origin and reduces performance because CloudFront must forward more requests to your origin",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/header-caching.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "915cc2d1-9ea7-4fab-83ad-92b623cb163b",
+      "service_name": "cloudfront",
+      "scenario": "CloudFront Alternate Domain Names",
+      "alert_criteria": "Yellow: A CloudFront distribution includes alternate domain names, but the DNS configuration is not correctly set up with a CNAME record or an Amazon Route 53 alias resource record.",
+      "recommendation_action": "Update the DNS configuration to route DNS queries to the CloudFront distribution",
+      "risk_detail": "performance",
+      "build_priority": 1,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Checks Amazon CloudFront distributions for alternate domain names (CNAMES) that have incorrectly configured DNS settings. If a CloudFront distribution includes alternate domain names, the DNS configuration for the domains must route DNS queries to that distribution.\n\nNote: This check assumes Amazon Route 53 DNS and Amazon CloudFront distribution are configured in the same AWS account. As such the Alert list may include resources otherwise working as expected due to DNS setting outsides of this AWS account.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html",
+        "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "4769bb75-f7b8-4604-8ad1-2fbdabd7420d",
+      "service_name": "cloudfront",
+      "scenario": "CloudFront Content Delivery Optimization",
+      "alert_criteria": "The amount of data transferred out of the bucket to your users by GET requests in the 30 days preceding the check is at least 25 times greater than the average amount of data stored in the bucket.",
+      "recommendation_action": "Consider using CloudFront for better performance",
+      "risk_detail": "performance",
+      "build_priority": 0,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "Checks for cases where data transfer from Amazon Simple Storage Service (Amazon S3) buckets could be accelerated by using Amazon CloudFront, the AWS global content delivery service. When you configure CloudFront to deliver your content, requests for your content are automatically routed to the nearest edge location where content is cached, so it can be delivered to your users with the best possible performance. A high ratio of data transferred out to the data stored in the bucket indicates that you could benefit from using Amazon CloudFront to deliver the data. To estimate the retrieval activity of users, only data transferred by using a GET request is counted for this check. In addition, the transfer activity from the last 24 hours is not included.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://aws.amazon.com/cloudfront/features/",
+        "https://aws.amazon.com/cloudfront/pricing/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "cc4250bc-4065-4a12-8fa8-74f386b45702",
+      "service_name": "cloudfront",
+      "scenario": "CloudFront Content Delivery Optimization",
+      "alert_criteria": "The amount of data transferred out of the bucket to your users by GET requests in the 30 days preceding the check is at least 10 TB and at least 25 times greater than the average amount of data stored in the bucket.",
+      "recommendation_action": "If the data transferred is 10 TB per month or more, see Amazon CloudFront Pricing to explore possible cost savings.",
+      "risk_detail": "performance",
+      "build_priority": 0,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "Checks for cases where data transfer from Amazon Simple Storage Service (Amazon S3) buckets could be accelerated by using Amazon CloudFront, the AWS global content delivery service. When you configure CloudFront to deliver your content, requests for your content are automatically routed to the nearest edge location where content is cached, so it can be delivered to your users with the best possible performance. A high ratio of data transferred out to the data stored in the bucket indicates that you could benefit from using Amazon CloudFront to deliver the data. To estimate the retrieval activity of users, only data transferred by using a GET request is counted for this check. In addition, the transfer activity from the last 24 hours is not included.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://aws.amazon.com/cloudfront/features/",
+        "https://aws.amazon.com/cloudfront/pricing/"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "327f7304-6e47-4eff-93b2-e070afcfc180",
+      "service_name": "cloudfront",
+      "scenario": "streaming service needs to reduce latency for its users",
+      "alert_criteria": "Condition detected: streaming service needs to reduce latency for its users",
+      "recommendation_action": "use cdn",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "ef6b202e-cb88-4f1b-aadb-a2f17804a8e5",
+      "service_name": "cloudfront",
+      "scenario": "CloudFront Alternate Domain Names",
+      "alert_criteria": "Yellow: A CloudFront distribution includes alternate domain names, but Trusted Advisor could not evaluate the DNS configuration because there were too many redirects.",
+      "recommendation_action": "Update the DNS configuration to route DNS queries to the CloudFront distribution",
+      "risk_detail": "performance",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Checks Amazon CloudFront distributions for alternate domain names (CNAMES) that have incorrectly configured DNS settings. If a CloudFront distribution includes alternate domain names, the DNS configuration for the domains must route DNS queries to that distribution.\n\nNote: This check assumes Amazon Route 53 DNS and Amazon CloudFront distribution are configured in the same AWS account. As such the Alert list may include resources otherwise working as expected due to DNS setting outsides of this AWS account.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html",
+        "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "0d84ee37-e841-4b16-ae87-5b0ec720c927",
+      "service_name": "cloudfront",
+      "scenario": "CloudFront Alternate Domain Names",
+      "alert_criteria": "Yellow: A CloudFront distribution includes alternate domain names, but Trusted Advisor could not evaluate the DNS configuration for some other reason, most likely because of a timeout.",
+      "recommendation_action": "Update the DNS configuration to route DNS queries to the CloudFront distribution",
+      "risk_detail": "performance",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "Checks Amazon CloudFront distributions for alternate domain names (CNAMES) that have incorrectly configured DNS settings. If a CloudFront distribution includes alternate domain names, the DNS configuration for the domains must route DNS queries to that distribution.\n\nNote: This check assumes Amazon Route 53 DNS and Amazon CloudFront distribution are configured in the same AWS account. As such the Alert list may include resources otherwise working as expected due to DNS setting outsides of this AWS account.",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html",
+        "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "15ac6ce0-cfab-4e25-87dd-ff769faec385",
+      "service_name": "cloudfront",
+      "scenario": "user wants their application optimized based on the command types (e,g, GET vs POST)",
+      "alert_criteria": "Performance metrics indicate optimization opportunity",
+      "recommendation_action": "Optimize resource configuration for improved performance",
+      "risk_detail": "performance",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "command type (e.g. list vs get) have different pricing",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2025-11-04T23:07:44.651478Z",
+        "contributors": [
+          "initial-import"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "a9f10db4-5c47-4865-8b9f-648f09a81605",
+      "service_name": "cloudfront",
+      "scenario": "cloudfront distributions are too expensive",
+      "alert_criteria": "Condition detected: cloudfront distributions are too expensive",
+      "recommendation_action": "optimize routes, pricing table, and ingress (?) traffic to set proper cloudfront configurations based on path patterns (eg route images to foo and api requests to bar)",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.212409+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "f9b6e58a-21cb-47b1-92af-1841391713ff",
+      "service_name": "cloudfront",
+      "scenario": "user wants to restrict users from accessing their content from a particular country",
+      "alert_criteria": "Condition detected: user wants to restrict users from accessing their content from a particular country",
+      "recommendation_action": "use cloudfront geo restriction",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.212687+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "19e6e1a5-3569-460a-8be6-582246d05090",
+      "service_name": "cloudfront",
+      "scenario": "You would like to provide your users access to hundreds of private files in your CloudFront distribution, which is fronting an HTTP web server behind an application load balancer",
+      "alert_criteria": "Condition detected: You would like to provide your users access to hundreds of private files in your CloudFront distribu",
+      "recommendation_action": "use cloudfront signed cookies",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.212856+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "12f2d76b-5c61-403a-bcbe-71c1a4d3ec61",
+      "service_name": "cloudfront",
+      "scenario": "user wants to ensure his CDN is secure",
+      "alert_criteria": "When TLS is <= x",
+      "recommendation_action": "Update the CDN to use valid cyphers from TLS 1.2/1.3",
+      "risk_detail": "security",
+      "build_priority": null,
+      "action_value": 3,
+      "effort_level": 2,
+      "risk_value": 3,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [
+        "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html"
+      ],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.216440+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    },
+    {
+      "id": "fa2ba14d-f984-4efb-a5ae-6a7da7f4257a",
+      "service_name": "cloudfront",
+      "scenario": "user wants an encrypted connection between cloudfront and origin server",
+      "alert_criteria": "Condition detected: user wants an encrypted connection between cloudfront and origin server",
+      "recommendation_action": "Review and update configuration following AWS best practices",
+      "risk_detail": "operations",
+      "build_priority": null,
+      "action_value": 2,
+      "effort_level": 2,
+      "risk_value": 2,
+      "recommendation_description_detailed": "",
+      "category": null,
+      "output_notes": null,
+      "notes": null,
+      "references": [],
+      "metadata": {
+        "created_at": "2025-11-04T23:07:44.651478Z",
+        "updated_at": "2026-01-17T05:07:12.217208+00:00",
+        "contributors": [
+          "initial-import",
+          "classification-2026"
+        ],
+        "source": "Initial CSV Import"
+      },
+      "tags": []
+    }
+  ]
+}
