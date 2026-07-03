@@ -35,7 +35,7 @@ jobs:
             echo "No shell scripts found."
             exit 0
           fi
-          shellcheck -x "${scripts[@]}"
+          shellcheck -S error -x "${scripts[@]}"
 
   dependency-audit:
     name: Dependency audit
