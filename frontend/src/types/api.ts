@@ -439,19 +439,12 @@ export interface FeatureStatus {
   note?: string
 }
 
-export interface UpgradePath {
-  next_tier: string
-  action: string
-  unlocks: string[]
-}
-
 export interface PermissionStatusResponse {
   account_id?: string
   tier: string
   features: Record<string, FeatureStatus>
   checked_at?: string
   expires_at?: string
-  upgrade_path?: UpgradePath
 }
 
 // --- Misconfig ---

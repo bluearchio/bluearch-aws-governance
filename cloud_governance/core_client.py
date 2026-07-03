@@ -91,7 +91,6 @@ class CoreClient:
         return self._request(
             "GET",
             "/api/v1/resources",
-            service_token=False,
             params={"limit": limit, "offset": offset},
         )
 
@@ -124,7 +123,7 @@ class CoreClient:
     def delete_storage(self, namespace: str, collection: str, record_key: str) -> dict[str, Any]:
         return self._request("DELETE", f"/api/v1/storage/{namespace}/{collection}/{record_key}")
 
-    def proxy(self, method: str, path: str, service_token: bool = False, **kwargs) -> Any:
+    def proxy(self, method: str, path: str, service_token: bool = True, **kwargs) -> Any:
         """Proxy a product-backend request to bluearch-core."""
         return self._request(method, path, service_token=service_token, **kwargs)
 

@@ -252,7 +252,7 @@ def create_app() -> FastAPI:
     return app
 
 
-def _proxy_core(method: str, path: str, service_token: bool = False, **kwargs):
+def _proxy_core(method: str, path: str, service_token: bool = True, **kwargs):
     try:
         return CoreClient().proxy(method, path, service_token=service_token, **kwargs)
     except Exception as exc:

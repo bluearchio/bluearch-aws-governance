@@ -14,11 +14,6 @@ interface PermissionStatusResponse {
   features: Record<string, FeatureStatus>
   account_id?: string
   checked_at?: string
-  upgrade_path?: {
-    next_tier: string
-    action: string
-    unlocks: string[]
-  }
 }
 
 export const usePermissionStore = defineStore('permissions', () => {

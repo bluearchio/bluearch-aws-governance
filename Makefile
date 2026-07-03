@@ -13,7 +13,7 @@ setup:
 	cd frontend && npm ci
 
 backend-dev:
-	$(VENV)/bin/cloud-governance web start --host 127.0.0.1 --port 8097
+	PYTHONPATH=. $(PY) -m cloud_governance.cli web start --host 127.0.0.1 --port 8097
 
 frontend-dev:
 	cd frontend && npm run dev

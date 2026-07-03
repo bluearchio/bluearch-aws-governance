@@ -408,3 +408,7 @@ def _terminate_process(pid: int) -> None:
 
 app.add_typer(catalog_app, name="catalog")
 app.add_typer(web_app, name="web")
+
+
+if __name__ == "__main__":
+    app()
