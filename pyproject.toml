@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bluearch-aws-governance"
-version = "0.2.2"
+version = "0.2.3"
 description = "BlueArch AWS Governance Hub with bundled misconfiguration catalog."
 readme = "README.md"
 requires-python = ">=3.10"
