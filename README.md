@@ -35,6 +35,18 @@ cloud-governance catalog load
 cloud-governance web start
 ```
 
+Linux:
+
+```bash
+curl -fsSL https://dist.bluearch.io/install/bluearch-aws-governance.sh | bash
+export PATH="$HOME/.local/bin:$PATH"
+bluearch-core start --daemon
+cloud-governance catalog load
+cloud-governance web start
+```
+
+The Linux installer installs `bluearch-core` automatically if it is missing.
+
 From source:
 
 ```bash
