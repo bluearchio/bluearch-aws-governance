@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  BINARY_NAME: cloud-governance
+  BINARY_NAME: bluearch-aws-governance
 
 jobs:
   build-unsigned:

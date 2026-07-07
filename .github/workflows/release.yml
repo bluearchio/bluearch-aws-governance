@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  BINARY_NAME: cloud-governance
+  BINARY_NAME: bluearch-aws-governance
   HOMEBREW_FORMULA: bluearch-aws-governance
   HOMEBREW_TAP_REPO: bluearchio/homebrew-tap
   RELEASE_TAG: ${{ github.ref_name }}

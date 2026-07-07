@@ -2,12 +2,12 @@
 
 set -euo pipefail
 
-BINARY_NAME="${BINARY_NAME:-cloud-governance}"
+BINARY_NAME="${BINARY_NAME:-bluearch-aws-governance}"
 PACKAGE_NAME="${PACKAGE_NAME:-cloud_governance}"
 ENTRY_IMPORT="${ENTRY_IMPORT:-cloud_governance.cli}"
 APP_OBJECT="${APP_OBJECT:-app}"
 if [ -z "${ONEFILE_TEMPDIR:-}" ]; then
-  ONEFILE_TEMPDIR="{HOME}/.cloud-governance/bin"
+  ONEFILE_TEMPDIR="{HOME}/.bluearch-aws-governance/bin"
 fi
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
