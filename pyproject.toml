@@ -33,6 +33,7 @@ classifiers = [
 ]
 
 [project.scripts]
+bluearch-aws-governance = "cloud_governance.cli:app"
 cloud-governance = "cloud_governance.cli:app"
 
 [tool.setuptools.packages.find]
