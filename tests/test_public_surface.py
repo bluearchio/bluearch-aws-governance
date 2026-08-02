@@ -88,6 +88,21 @@ def test_customer_docs_use_direct_formula_install_and_public_commands():
     )
 
 
+def test_linux_installer_defaults_to_github_with_optional_mirror_only():
+    installer = (ROOT / "scripts/install-linux.sh").read_text(encoding="utf-8")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "https://github.com/%s/releases/latest/download" in installer
+    assert "https://github.com/%s/releases/download/%s" in installer
+    assert 'mirror_base="${BLUEARCH_DIST_BASE_URL:-}"' in installer
+    assert "https://dist.bluearch.io" not in installer
+    assert (
+        "https://github.com/bluearchio/bluearch-aws-governance/releases/latest/download/install-linux.sh"
+        in readme
+    )
+    assert "BLUEARCH_DIST_BASE_URL" in readme
+
+
 def test_setup_view_lists_only_registered_public_core_commands():
     setup_view = (ROOT / "frontend/src/views/SetupView.vue").read_text(encoding="utf-8")
     commands = set(re.findall(r"<code>(bluearch-[^<]+)</code>", setup_view))

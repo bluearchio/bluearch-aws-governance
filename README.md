@@ -57,14 +57,18 @@ brew install bluearchio/tap/bluearch-aws-governance
 Linux:
 
 ```bash
-curl -fsSL https://dist.bluearch.io/install/bluearch-aws-governance.sh | bash
+curl -fsSL https://github.com/bluearchio/bluearch-aws-governance/releases/latest/download/install-linux.sh | bash
 export PATH="$HOME/.local/bin:$PATH"
 bluearch-aws-core start --daemon
 bluearch-aws-governance catalog import
 bluearch-aws-governance catalog summary
 ```
 
-The Linux installer installs `bluearch-aws-core` automatically if it is missing.
+The Linux installer downloads verified assets directly from GitHub Releases and
+installs `bluearch-aws-core` automatically if it is missing. Set
+`BLUEARCH_VERSION=vX.Y.Z` (and optionally `BLUEARCH_CORE_VERSION=vX.Y.Z`) to pin
+an immutable release. `BLUEARCH_DIST_BASE_URL` is available only as an explicit
+mirror override; it is not used by default.
 
 From source:
 
@@ -131,7 +135,25 @@ gh attestation verify bluearch-aws-governance-linux-x86_64.tar.gz --repo bluearc
 
 For macOS, verify `bluearch-aws-governance-macos-arm64.zip` with `gh attestation verify`.
 
-Homebrew formula promotion is a separate, reviewed post-artifact checkpoint. This repository's release workflow does not modify the tap; promote a formula only after the release archive, checksum, signature, notarization result, and attestation have all been verified.
+Before publishing, the release workflow validates that the dedicated
+cross-repository token has the required access to `bluearchio/homebrew-tap`.
+Configure that fine-grained token with least privilege: repository access only
+to the tap, with Contents and Pull requests write permissions. The tap repository
+must have auto-merge enabled, and tap `main` must protect the formula-validation
+checks as required status checks. After the
+GitHub Release is published, it checks out the tap's `main` branch with
+credentials disabled, creates or updates
+`release/bluearch-aws-governance-<tag>`, and runs the tap's
+`scripts/update_formula.py`. That script generates the immutable GitHub Release
+URL from the exact signed macOS asset and its verified SHA-256.
+
+The workflow opens a pull request against the tap's `main` branch and requests
+native GitHub auto-merge with `--auto --squash --delete-branch`. GitHub merges
+only after the protected required tap checks pass; the product workflow never
+bypasses checks or pushes directly to tap `main`. The release workflow remains
+pending until the formula pull request is actually `MERGED`; a closed pull
+request or a two-hour timeout fails the workflow. If the formula is already
+current, no pull request or auto-merge is requested.
 
 ## Security And Privacy Defaults
 

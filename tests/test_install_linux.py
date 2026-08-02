@@ -142,6 +142,109 @@ def _run_installer(
     return result, install_dir / BINARY_NAME
 
 
+def _probe_first_download_url(
+    tmp_path: Path,
+    version: str,
+    *,
+    mirror: str | None = None,
+) -> tuple[subprocess.CompletedProcess[str], list[str]]:
+    fake_bin = tmp_path / "probe-bin"
+    fake_bin.mkdir()
+    _write_fake_uname(fake_bin)
+    core = fake_bin / CORE_BINARY_NAME
+    core.write_text(
+        "#!/bin/sh\necho 'bluearch-aws-core 0.2.6'\n",
+        encoding="utf-8",
+    )
+    core.chmod(0o755)
+    curl = fake_bin / "curl"
+    curl.write_text(
+        """#!/bin/sh
+for argument in "$@"; do
+  case "$argument" in
+    https://*|file://*) printf '%s\\n' "$argument" >> "$URL_LOG"; break ;;
+  esac
+done
+exit 22
+""",
+        encoding="utf-8",
+    )
+    curl.chmod(0o755)
+    url_log = tmp_path / "urls.log"
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "PATH": f"{fake_bin}{os.pathsep}{environment['PATH']}",
+            "HOME": os.fspath(tmp_path / "home"),
+            "INSTALL_DIR": os.fspath(tmp_path / "install"),
+            "BLUEARCH_VERSION": version,
+            "BLUEARCH_INSTALL_CORE": "missing",
+            "URL_LOG": os.fspath(url_log),
+        }
+    )
+    environment.pop("GITHUB_TOKEN", None)
+    environment.pop("GH_TOKEN", None)
+    if mirror is None:
+        environment.pop("BLUEARCH_DIST_BASE_URL", None)
+    else:
+        environment["BLUEARCH_DIST_BASE_URL"] = mirror
+
+    result = subprocess.run(
+        ["bash", os.fspath(INSTALLER)],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    urls = url_log.read_text(encoding="utf-8").splitlines() if url_log.exists() else []
+    return result, urls
+
+
+@pytest.mark.parametrize(
+    ("version", "release_path"),
+    [
+        ("latest", "releases/latest/download"),
+        ("1.2.3", "releases/download/v1.2.3"),
+        ("v1.2.3", "releases/download/v1.2.3"),
+    ],
+)
+def test_installer_defaults_to_github_release_downloads(
+    tmp_path,
+    version,
+    release_path,
+):
+    result, urls = _probe_first_download_url(tmp_path, version)
+
+    assert result.returncode != 0
+    assert urls == [
+        f"https://github.com/bluearchio/bluearch-aws-governance/{release_path}/{ASSET_NAME}"
+    ]
+
+
+@pytest.mark.parametrize("version", ["1.2", "v1.2.3-rc1", "../latest"])
+def test_installer_rejects_noncanonical_release_versions(tmp_path, version):
+    result, urls = _probe_first_download_url(tmp_path, version)
+
+    assert result.returncode != 0
+    assert urls == []
+    assert "latest, X.Y.Z, or vX.Y.Z" in result.stderr
+
+
+def test_installer_uses_explicit_mirror_override_with_normalized_tag(tmp_path):
+    result, urls = _probe_first_download_url(
+        tmp_path,
+        "1.2.3",
+        mirror="https://mirror.example/base/",
+    )
+
+    assert result.returncode != 0
+    assert urls == [
+        f"https://mirror.example/base/releases/bluearch-aws-governance/v1.2.3/{ASSET_NAME}"
+    ]
+
+
 def test_installer_accepts_one_verified_root_executable(tmp_path):
     result, installed = _run_installer(tmp_path)
 
