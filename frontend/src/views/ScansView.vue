@@ -3,7 +3,7 @@
     <section class="scan-control">
       <div>
         <h2>Inventory Scan</h2>
-        <p>Collect AWS inventory into bluearch-core for Governance Hub policy evaluation.</p>
+        <p>Collect AWS inventory into bluearch-aws-core for Governance Hub policy evaluation.</p>
       </div>
       <div class="scan-actions">
         <button class="chip-action" @click="useUsRegions">US regions</button>

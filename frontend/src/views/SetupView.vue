@@ -473,7 +473,7 @@
               <span class="step-num">1</span>
               <div class="step-content">
                 <strong>Deploy Cross-Account Role (Single Account)</strong>
-                <code>bluearch-core setup assume-role --deploy</code>
+                <code>bluearch-aws-core setup assume-role</code>
                 <p>Creates an IAM role in your account with the required permissions.</p>
               </div>
             </div>
@@ -481,7 +481,7 @@
               <span class="step-num">2</span>
               <div class="step-content">
                 <strong>Deploy Multi-Account StackSets (AWS Organizations)</strong>
-                <code>bluearch-core setup multi-account</code>
+                <code>bluearch-aws-core setup multi-account</code>
                 <p>Deploys IAM roles across all member accounts using StackSets.</p>
               </div>
             </div>
@@ -489,8 +489,8 @@
               <span class="step-num">3</span>
               <div class="step-content">
                 <strong>Verify Configuration</strong>
-                <code>bluearch-core setup assume-role --status</code>
-                <p>Check the status of configured roles and test cross-account access.</p>
+                <code>bluearch-aws-core setup validate</code>
+                <p>Validate the shared runtime and its local prerequisites.</p>
               </div>
             </div>
           </div>
@@ -561,22 +561,18 @@
       <div class="cli-commands">
         <div class="cli-group">
           <h4>Initial Setup</h4>
-          <div class="cli-cmd"><code>bluearch-core setup wizard</code><span>Interactive setup wizard</span></div>
-          <div class="cli-cmd"><code>bluearch-core setup validate</code><span>Validate configuration</span></div>
-          <div class="cli-cmd"><code>bluearch-core setup validate --iam</code><span>Show required IAM permissions</span></div>
-          <div class="cli-cmd"><code>bluearch-core setup doctor</code><span>Diagnose installation issues</span></div>
+          <div class="cli-cmd"><code>bluearch-aws-core doctor</code><span>Diagnose the shared runtime</span></div>
+          <div class="cli-cmd"><code>bluearch-aws-core setup validate</code><span>Validate local prerequisites</span></div>
         </div>
         <div class="cli-group">
-          <h4>AWS Configuration</h4>
-          <div class="cli-cmd"><code>bluearch-core setup aws</code><span>Configure AWS profile</span></div>
-          <div class="cli-cmd"><code>bluearch-core setup database</code><span>Initialize database</span></div>
-          <div class="cli-cmd"><code>bluearch-core setup database --force</code><span>Reset and reinitialize database</span></div>
+          <h4>AWS Services</h4>
+          <div class="cli-cmd"><code>bluearch-aws-core setup event-tracking</code><span>Sync event-tracking queues</span></div>
+          <div class="cli-cmd"><code>bluearch-aws-core setup cost-reports</code><span>Deploy or reuse cost reports</span></div>
         </div>
         <div class="cli-group">
           <h4>Multi-Account</h4>
-          <div class="cli-cmd"><code>bluearch-core setup multi-account</code><span>Deploy cross-account StackSets</span></div>
-          <div class="cli-cmd"><code>bluearch-core setup assume-role --deploy</code><span>Configure assume-role auth</span></div>
-          <div class="cli-cmd"><code>bluearch-core setup assume-role --status</code><span>Check role configuration</span></div>
+          <div class="cli-cmd"><code>bluearch-aws-core setup multi-account</code><span>Deploy cross-account StackSets</span></div>
+          <div class="cli-cmd"><code>bluearch-aws-core setup assume-role</code><span>Configure assume-role access</span></div>
         </div>
       </div>
     </div>

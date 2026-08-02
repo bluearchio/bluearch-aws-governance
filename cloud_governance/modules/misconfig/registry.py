@@ -1,6 +1,6 @@
 """Governance Hub misconfiguration catalog registry.
 
-The catalog rows live in bluearch-core. This registry adapts the core catalog
+The catalog rows live in bluearch-aws-core. This registry adapts the core catalog
 response to the same in-memory lookup shape used by the legacy BlueArch
 misconfig scanner so the evaluator modules can be moved without carrying the
 bundled JSON catalog into this repo.
@@ -77,7 +77,7 @@ def _parse_risk_detail(risk_detail: str) -> List[str]:
 
 
 class MisconfigRegistry:
-    """In-memory index of catalog rows fetched from bluearch-core."""
+    """In-memory index of catalog rows fetched from bluearch-aws-core."""
 
     def __init__(self, client: CoreClient | None = None):
         self.client = client or CoreClient(timeout=30)
@@ -110,7 +110,7 @@ class MisconfigRegistry:
             if offset + len(entries) >= int(response.get("total") or 0) or len(entries) < limit:
                 break
             offset += limit
-        logger.info("MisconfigRegistry loaded %d catalog rows from bluearch-core", loaded)
+        logger.info("MisconfigRegistry loaded %d catalog rows from bluearch-aws-core", loaded)
 
     @property
     def count(self) -> int:

@@ -28,12 +28,15 @@ python scripts/validate.py by-service
 
 ```bash
 brew tap bluearchio/tap
-brew install bluearchio/tap/bluearch-aws-core
+brew trust --formula bluearchio/tap/bluearch-aws-core
+brew trust --formula bluearchio/tap/bluearch-aws-governance
 brew install bluearchio/tap/bluearch-aws-governance
 bluearch-aws-core start --daemon
-bluearch-aws-governance catalog load
-bluearch-aws-governance web start
+bluearch-aws-governance catalog import
+bluearch-aws-governance catalog summary
 ```
+
+Formula-specific trust is narrower than trusting the entire tap: it authorizes only the Core and Governance formulas needed here. The Governance formula installs its compatible `bluearch-aws-core` dependency automatically.
 
 Linux:
 
@@ -41,12 +44,11 @@ Linux:
 curl -fsSL https://dist.bluearch.io/install/bluearch-aws-governance.sh | bash
 export PATH="$HOME/.local/bin:$PATH"
 bluearch-aws-core start --daemon
-bluearch-aws-governance catalog load
-bluearch-aws-governance web start
+bluearch-aws-governance catalog import
+bluearch-aws-governance catalog summary
 ```
 
 The Linux installer installs `bluearch-aws-core` automatically if it is missing.
-`cloud-governance` is also installed as a shorter compatibility command.
 
 From source:
 
@@ -55,7 +57,8 @@ python -m venv .venv
 . .venv/bin/activate
 pip install -e .
 bluearch-aws-core start --daemon
-bluearch-aws-governance catalog load
+bluearch-aws-governance catalog import
+bluearch-aws-governance catalog summary
 ```
 
 ## Local Development
@@ -64,8 +67,10 @@ Backend:
 
 ```bash
 . .venv/bin/activate
-bluearch-aws-governance web start --host 127.0.0.1 --port 8097
+make backend-dev
 ```
+
+The backend target uses the internal source server path. Installed dashboards are started and supervised by `bluearch-aws-core start --daemon`.
 
 Frontend:
 

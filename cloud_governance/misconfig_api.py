@@ -1,7 +1,7 @@
 """Governance Hub misconfiguration API.
 
 This is the product-owned API surface copied from BlueArch CLI and adapted to
-the core split: catalog and inventory come from bluearch-core, while Governance
+the core split: catalog and inventory come from bluearch-aws-core, while Governance
 Hub runs the executable evaluators and persists policies/findings through core
 storage APIs.
 """

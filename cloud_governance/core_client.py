@@ -1,4 +1,4 @@
-"""HTTP client for bluearch-core governance APIs."""
+"""HTTP client for bluearch-aws-core governance APIs."""
 
 from __future__ import annotations
 
@@ -124,7 +124,7 @@ class CoreClient:
         return self._request("DELETE", f"/api/v1/storage/{namespace}/{collection}/{record_key}")
 
     def proxy(self, method: str, path: str, service_token: bool = True, **kwargs) -> Any:
-        """Proxy a product-backend request to bluearch-core."""
+        """Proxy a product-backend request to bluearch-aws-core."""
         return self._request(method, path, service_token=service_token, **kwargs)
 
     def _request(self, method: str, path: str, service_token: bool = True, **kwargs):
@@ -140,7 +140,7 @@ class CoreClient:
                 **kwargs,
             )
         except requests.RequestException as exc:
-            raise CoreRuntimeError(f"bluearch-core is not reachable at {self.base_url}: {exc}") from exc
+            raise CoreRuntimeError(f"bluearch-aws-core is not reachable at {self.base_url}: {exc}") from exc
         response.raise_for_status()
         return response.json()
 
@@ -156,11 +156,11 @@ def _format_core_update_message(app_name: str, status: dict[str, Any], minimum_v
     core_version = status.get("core_version") or "unknown"
     app_label = app_name.replace("-", " ")
     return (
-        f"bluearch-core {core_version} is too old for {app_label}. "
+        f"bluearch-aws-core {core_version} is too old for {app_label}. "
         f"Required version: >= {minimum_version}. "
-        "Install or update BlueArch Core with your installer, or with Homebrew: "
+        "Install or update BlueArch AWS Core with your installer, or with Homebrew: "
         "`brew install bluearchio/tap/bluearch-aws-core`; then restart it with "
-        "`bluearch-core start --daemon`."
+        "`bluearch-aws-core start --daemon`."
     )
 
 
