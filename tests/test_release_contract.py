@@ -211,6 +211,8 @@ def test_release_jobs_verify_archives_before_separate_sbom_and_publish():
     assert "--keepParent" not in notarize["run"]
     assert "--norsrc --noextattr --noqtn --noacl" in notarize["run"]
     assert "cd dist" in notarize["run"]
+    assert "notarytool submit" in notarize["run"]
+    assert "--wait" in notarize["run"]
     assert mac_verify["run"].startswith("bash scripts/verify_macos_artifact.sh")
     assert '"${RELEASE_TAG#v}"' in mac_verify["run"]
     assert "anchore/sbom-action" not in str(jobs["macos"])
@@ -520,6 +522,15 @@ def test_macos_verifier_requires_expected_version_argument(tmp_path):
 
     assert result.returncode == 2
     assert "EXPECTED_VERSION" in result.stderr
+
+
+def test_macos_verifier_checks_signature_and_notarization_without_spctl():
+    verifier_source = MACOS_VERIFIER.read_text(encoding="utf-8")
+
+    assert "codesign --verify" in verifier_source
+    assert "--check-notarization" in verifier_source
+    assert '-R="notarized"' in verifier_source
+    assert "spctl --assess" not in verifier_source
 
 
 def test_macos_verifier_inspects_archive_before_extraction(tmp_path):

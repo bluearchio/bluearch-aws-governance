@@ -61,7 +61,10 @@ ROOT_ENTRY_COUNT="$(find "$VERIFY_DIR" -mindepth 1 -maxdepth 1 | wc -l | tr -d '
 }
 
 codesign --verify --deep --strict --verbose=2 "$BINARY_PATH"
-spctl --assess --type execute --verbose=4 "$BINARY_PATH"
+codesign -vvvv \
+  -R="notarized" \
+  --check-notarization \
+  "$BINARY_PATH"
 
 ARCHITECTURES="$(lipo -archs "$BINARY_PATH")"
 [[ "$ARCHITECTURES" == "arm64" ]] || {
