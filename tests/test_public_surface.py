@@ -15,7 +15,16 @@ def test_catalog_help_exposes_import_and_not_nonexistent_load():
 
     assert result.exit_code == 0
     assert "import" in result.stdout
+    assert "verify" in result.stdout
     assert "load" not in result.stdout
+
+
+def test_bundled_catalog_verification_is_read_only_and_parseable():
+    result = runner.invoke(cli.app, ["catalog", "verify"])
+
+    assert result.exit_code == 0
+    assert "Bundled catalog files: 47" in result.stdout
+    assert "Bundled catalog entries: 621" in result.stdout
 
 
 def test_health_identifies_public_governance_service(monkeypatch):

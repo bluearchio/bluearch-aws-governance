@@ -9,7 +9,7 @@ PIP := $(VENV)/bin/pip
 setup:
 	$(PYTHON) -m venv $(VENV)
 	$(PIP) install -U pip
-	$(PIP) install -e . pytest httpx2
+	$(PIP) install -e . pytest httpx2 PyYAML
 	cd frontend && npm ci
 
 backend-dev:

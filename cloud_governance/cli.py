@@ -124,6 +124,35 @@ def catalog_summary():
     console.print(f"Unsupported: {summary['unsupported']}")
 
 
+@catalog_app.command("verify")
+def verify_bundled_catalog():
+    """Verify that the bundled, read-only catalog is present and parseable."""
+    source_path = resolve_catalog_source_path()
+    if source_path is None:
+        console.print("[red]Bundled Governance Hub catalog is not available.[/red]")
+        raise typer.Exit(1)
+    by_service = source_path / "by-service"
+    if not by_service.is_dir():
+        by_service = source_path / "data" / "by-service"
+    files = sorted(by_service.glob("*.json"))
+    entries = 0
+    try:
+        for path in files:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            rows = payload.get("misconfigurations")
+            if not isinstance(rows, list):
+                raise ValueError(f"{path.name} has no misconfigurations list")
+            entries += len(rows)
+    except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        console.print(f"[red]Bundled catalog verification failed: {exc}[/red]")
+        raise typer.Exit(1) from exc
+    if not files or entries <= 0:
+        console.print("[red]Bundled catalog contains no entries.[/red]")
+        raise typer.Exit(1)
+    console.print(f"Bundled catalog files: {len(files)}")
+    console.print(f"Bundled catalog entries: {entries}")
+
+
 @catalog_app.command("list")
 def list_catalog(
     service: str | None = typer.Option(None, "--service"),

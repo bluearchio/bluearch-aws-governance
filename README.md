@@ -115,7 +115,7 @@ gh attestation verify bluearch-aws-governance-linux-x86_64.tar.gz --repo bluearc
 
 For macOS, verify `bluearch-aws-governance-macos-arm64.zip` with `gh attestation verify`.
 
-Release workflows also open a pull request against `bluearchio/homebrew-tap` to update `bluearch-aws-governance`. Configure `HOMEBREW_TAP_TOKEN_2` before cutting a public tag.
+Homebrew formula promotion is a separate, reviewed post-artifact checkpoint. This repository's release workflow does not modify the tap; promote a formula only after the release archive, checksum, signature, notarization result, and attestation have all been verified.
 
 ## Security And Privacy Defaults
 

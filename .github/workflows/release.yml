@@ -1,7 +1,6 @@
 name: Release
 
 on:
-  workflow_dispatch:
   push:
     tags:
       - "v*"
@@ -15,14 +14,68 @@ concurrency:
 
 env:
   BINARY_NAME: bluearch-aws-governance
-  HOMEBREW_FORMULA: bluearch-aws-governance
-  HOMEBREW_TAP_REPO: bluearchio/homebrew-tap
   RELEASE_TAG: ${{ github.ref_name }}
 
 jobs:
+  verify:
+    name: Verify tag, version, and source
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install verification dependencies
+        shell: bash
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e . pytest httpx2 PyYAML
+          npm ci --prefix frontend
+      - name: Verify immutable tag and main commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "${GITHUB_REF_TYPE}" == "tag" ]]
+          [[ "${RELEASE_TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          committed_version="$(python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          print(tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]["version"])
+          PY
+          )"
+          [[ "${RELEASE_TAG}" == "v${committed_version}" ]]
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          tag_sha="$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")"
+          main_sha="$(git rev-parse "refs/remotes/origin/main^{commit}")"
+          head_sha="$(git rev-parse "HEAD^{commit}")"
+          [[ "${tag_sha}" == "${main_sha}" ]]
+          [[ "${head_sha}" == "${main_sha}" ]]
+      - name: Validate bundled catalog
+        working-directory: catalog
+        run: python scripts/validate.py by-service
+      - name: Run Python tests
+        run: python -m pytest
+      - name: Compile Python package
+        run: python -m compileall cloud_governance
+      - name: Build frontend
+        run: npm run build --prefix frontend
+
   linux:
     name: Linux release binary
     runs-on: ubuntu-22.04
+    needs: verify
     if: startsWith(github.ref_name, 'v')
     permissions:
       contents: read
@@ -54,10 +107,25 @@ jobs:
           mkdir -p artifacts
           tar -C dist -czf "artifacts/$BINARY_NAME-linux-x86_64.tar.gz" "$BINARY_NAME"
           install -m 0755 scripts/install-linux.sh artifacts/install-linux.sh
+      - name: Verify final Linux archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="artifacts/$BINARY_NAME-linux-x86_64.tar.gz"
+          listing="$(tar -tzf "$archive")"
+          [[ "$listing" == "$BINARY_NAME" ]]
+          verify_dir="$(mktemp -d)"
+          trap 'rm -rf "$verify_dir"' EXIT
+          tar -xzf "$archive" -C "$verify_dir"
+          test -x "$verify_dir/$BINARY_NAME"
+          file "$verify_dir/$BINARY_NAME" | grep -E 'x86[-_]64|x86-64'
+          test "$("$verify_dir/$BINARY_NAME" --version)" = "${RELEASE_TAG#v}"
+          "$verify_dir/$BINARY_NAME" --help >/dev/null
+          "$verify_dir/$BINARY_NAME" catalog verify
       - name: Generate Linux SBOM
         uses: anchore/sbom-action@v0.24.0
         with:
-          path: .
+          path: artifacts/${{ env.BINARY_NAME }}-linux-x86_64.tar.gz
           format: cyclonedx-json
           output-file: artifacts/${{ env.BINARY_NAME }}-linux-x86_64.cyclonedx.json
           upload-artifact: false
@@ -71,6 +139,7 @@ jobs:
   macos:
     name: Signed macOS release binary
     runs-on: macos-14
+    needs: verify
     if: startsWith(github.ref_name, 'v')
     permissions:
       contents: read
@@ -98,14 +167,6 @@ jobs:
         run: bash scripts/build_nuitka_macos.sh
       - name: Prepare macOS artifacts directory
         run: mkdir -p artifacts
-      - name: Generate macOS SBOM
-        uses: anchore/sbom-action@v0.24.0
-        with:
-          path: .
-          format: cyclonedx-json
-          output-file: artifacts/${{ env.BINARY_NAME }}-macos-arm64.cyclonedx.json
-          upload-artifact: false
-          upload-release-assets: false
       - name: Import Apple signing assets
         env:
           MACOS_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 || secrets.APPLE_CERTIFICATE_BASE64 || secrets.MACOS_CERTIFICATE }}
@@ -191,8 +252,17 @@ jobs:
             echo "::error::Missing notarization credentials. Configure APPLE_API_KEY_* secrets or APPLE_ID, APPLE_ID_PASSWORD, and APPLE_TEAM_ID."
             exit 1
           fi
-          xcrun stapler staple "artifacts/$BINARY_NAME-macos-arm64.zip" || \
-            echo "::notice::Notarization succeeded; zip stapling is not required for this CLI artifact."
+      - name: Verify final notarized macOS archive
+        shell: bash
+        run: bash scripts/verify_macos_artifact.sh "artifacts/$BINARY_NAME-macos-arm64.zip" "$BINARY_NAME"
+      - name: Generate macOS SBOM
+        uses: anchore/sbom-action@v0.24.0
+        with:
+          path: artifacts/${{ env.BINARY_NAME }}-macos-arm64.zip
+          format: cyclonedx-json
+          output-file: artifacts/${{ env.BINARY_NAME }}-macos-arm64.cyclonedx.json
+          upload-artifact: false
+          upload-release-assets: false
       - uses: actions/upload-artifact@v4
         with:
           name: release-macos-arm64
@@ -202,12 +272,11 @@ jobs:
   publish:
     name: Publish signed release
     runs-on: ubuntu-24.04
-    needs: [linux, macos]
+    needs: [verify, linux, macos]
     if: startsWith(github.ref_name, 'v')
     permissions:
       contents: write
       attestations: write
-      artifact-metadata: write
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -226,6 +295,7 @@ jobs:
           cd release-assets
           find . -maxdepth 1 -type f ! -name 'SHA256SUMS' -printf '%P\0' | \
             sort -z | xargs -0 sha256sum > SHA256SUMS
+          sha256sum -c SHA256SUMS
       - name: Generate artifact provenance attestations
         if: github.event.repository.private == false
         uses: actions/attest@v4
@@ -234,15 +304,6 @@ jobs:
       - name: Note skipped artifact attestations
         if: github.event.repository.private
         run: echo "::notice::Artifact attestations are skipped while this repository is private. They will run for public release tags."
-      - name: Validate Homebrew tap token
-        env:
-          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN_2 }}
-        shell: bash
-        run: |
-          if [[ -z "${HOMEBREW_TAP_TOKEN:-}" ]]; then
-            echo "::error::Missing HOMEBREW_TAP_TOKEN_2. Create a fine-grained token scoped to ${HOMEBREW_TAP_REPO} contents and pull requests."
-            exit 1
-          fi
       - name: Publish draft release with all assets
         env:
           GH_TOKEN: ${{ github.token }}
@@ -254,53 +315,3 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-assets/* --draft --verify-tag --title "$RELEASE_TAG" --generate-notes
           gh release edit "$RELEASE_TAG" --draft=false
-      - name: Checkout Homebrew tap
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.HOMEBREW_TAP_REPO }}
-          token: ${{ secrets.HOMEBREW_TAP_TOKEN_2 }}
-          path: homebrew-tap
-          persist-credentials: false
-      - name: Update Homebrew formula
-        shell: bash
-        run: |
-          set -euo pipefail
-          asset="${BINARY_NAME}-macos-arm64.zip"
-          sha256="$(sha256sum "release-assets/${asset}" | awk '{print $1}')"
-          python3 homebrew-tap/scripts/update_formula.py \
-            --formula "homebrew-tap/Formula/${HOMEBREW_FORMULA}.rb" \
-            --repo "${GITHUB_REPOSITORY}" \
-            --version "${RELEASE_TAG}" \
-            --asset "${asset}" \
-            --sha256 "${sha256}" \
-            --binary "${BINARY_NAME}"
-          ruby -c "homebrew-tap/Formula/${HOMEBREW_FORMULA}.rb"
-      - name: Open Homebrew tap pull request
-        env:
-          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN_2 }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd homebrew-tap
-          branch="release/${HOMEBREW_FORMULA}-${RELEASE_TAG}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B "${branch}"
-          git add "Formula/${HOMEBREW_FORMULA}.rb"
-          if git diff --cached --quiet; then
-            echo "No Homebrew formula changes."
-            exit 0
-          fi
-          git commit -m "chore: update ${HOMEBREW_FORMULA} to ${RELEASE_TAG}"
-          gh auth setup-git -h github.com
-          git push --force-with-lease origin "${branch}"
-          if gh pr list --repo "${HOMEBREW_TAP_REPO}" --head "${branch}" --json number --jq '.[0].number // empty' | grep -q .; then
-            echo "Homebrew tap pull request already exists."
-          else
-            gh pr create \
-              --repo "${HOMEBREW_TAP_REPO}" \
-              --base main \
-              --head "${branch}" \
-              --title "chore: update ${HOMEBREW_FORMULA} to ${RELEASE_TAG}" \
-              --body "Updates ${HOMEBREW_FORMULA} to ${RELEASE_TAG} from ${GITHUB_REPOSITORY}."
-          fi

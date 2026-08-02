@@ -14,6 +14,15 @@ CORE_BINARY_NAME="bluearch-aws-core"
 CORE_ASSET_NAME="bluearch-aws-core-linux-x86_64.tar.gz"
 CORE_VERSION="${BLUEARCH_CORE_VERSION:-latest}"
 CORE_INSTALL_POLICY="${BLUEARCH_INSTALL_CORE:-missing}"
+TEMP_DIRS=()
+
+cleanup() {
+  local path
+  for path in "${TEMP_DIRS[@]}"; do
+    [[ -n "$path" && -d "$path" ]] && rm -rf "$path"
+  done
+}
+trap cleanup EXIT
 
 log() {
   printf '[bluearch] %s\n' "$*"
@@ -55,14 +64,28 @@ verify_checksum() {
   local checksums_file="$1"
   local asset_name="$2"
   local selected_file="$3"
+  local matching_rows
+  local matching_count
 
-  awk -v asset="$asset_name" '$2 == asset { print }' "$checksums_file" > "$selected_file"
-  if [[ ! -s "$selected_file" ]]; then
-    warn "SHA256SUMS did not contain ${asset_name}; continuing without checksum verification"
-    return
-  fi
+  matching_rows="$(awk -v asset="$asset_name" '
+    $2 == asset || $2 == "*" asset { print }
+  ' "$checksums_file")"
+  matching_count="$(printf '%s\n' "$matching_rows" | awk 'NF { count += 1 } END { print count + 0 }')"
+  [[ "$matching_count" == "1" ]] || fail "SHA256SUMS must contain exactly one row for ${asset_name}; found ${matching_count}"
 
-  sha256sum -c "$selected_file"
+  printf '%s\n' "$matching_rows" > "$selected_file"
+  (cd "$(dirname "$checksums_file")" && sha256sum -c "$(basename "$selected_file")") || \
+    fail "Checksum verification failed for ${asset_name}"
+}
+
+verify_archive_layout() {
+  local archive_path="$1"
+  local binary_name="$2"
+  local listing
+
+  listing="$(tar -tzf "$archive_path")" || fail "Unable to read archive ${archive_path}"
+  [[ "$listing" == "$binary_name" ]] || \
+    fail "Archive must contain exactly one root executable named ${binary_name}"
 }
 
 install_release() {
@@ -76,28 +99,26 @@ install_release() {
 
   base_url="$(release_base_url "$repo" "$version")"
   tmp_dir="$(mktemp -d)"
+  TEMP_DIRS+=("$tmp_dir")
 
   log "Downloading ${app_name} (${version})..."
-  download_file "${base_url}/${asset_name}" "${tmp_dir}/${asset_name}"
+  download_file "${base_url}/${asset_name}" "${tmp_dir}/${asset_name}" || \
+    fail "Unable to download ${asset_name}"
 
-  if download_file "${base_url}/SHA256SUMS" "${tmp_dir}/SHA256SUMS"; then
-    (cd "$tmp_dir" && verify_checksum "SHA256SUMS" "$asset_name" "SHA256SUMS.selected")
-  else
-    warn "Could not download SHA256SUMS; continuing without checksum verification"
-  fi
+  download_file "${base_url}/SHA256SUMS" "${tmp_dir}/SHA256SUMS" || \
+    fail "Unable to download required SHA256SUMS"
+  verify_checksum "${tmp_dir}/SHA256SUMS" "$asset_name" "${tmp_dir}/SHA256SUMS.selected"
+  verify_archive_layout "${tmp_dir}/${asset_name}" "$binary_name"
 
   mkdir -p "${tmp_dir}/extract"
   tar -xzf "${tmp_dir}/${asset_name}" -C "${tmp_dir}/extract"
 
   local extracted_binary="${tmp_dir}/extract/${binary_name}"
-  if [[ ! -f "$extracted_binary" ]]; then
-    extracted_binary="$(find "${tmp_dir}/extract" -type f -name "$binary_name" | head -n 1)"
-  fi
-  [[ -n "${extracted_binary:-}" && -f "$extracted_binary" ]] || fail "Archive did not contain ${binary_name}"
+  [[ -f "$extracted_binary" && ! -L "$extracted_binary" && -x "$extracted_binary" ]] || \
+    fail "Archive did not contain an executable root file named ${binary_name}"
 
   mkdir -p "$INSTALL_DIR"
   install -m 0755 "$extracted_binary" "${INSTALL_DIR}/${binary_name}"
-  rm -rf "$tmp_dir"
   log "Installed ${binary_name} to ${INSTALL_DIR}/${binary_name}"
 }
 

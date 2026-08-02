@@ -8,7 +8,7 @@ Thanks for helping improve `bluearch-aws-governance`.
 python -m venv .venv
 . .venv/bin/activate
 pip install -U pip
-pip install -e . pytest httpx2
+pip install -e . pytest httpx2 PyYAML
 
 cd frontend
 npm ci
