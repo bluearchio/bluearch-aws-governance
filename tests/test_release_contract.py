@@ -20,6 +20,10 @@ from scripts.set_release_version import normalize_release_tag
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release.yml"
+PREFLIGHT_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release-preflight.yml"
+DEVELOPMENT_BINARIES_WORKFLOW_PATH = (
+    ROOT / ".github" / "workflows" / "development-binaries.yml"
+)
 CI_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
 QUALITY_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "development-quality.yml"
 SCORECARD_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "scorecard.yml"
@@ -28,6 +32,10 @@ MACOS_VERIFIER = ROOT / "scripts" / "verify_macos_artifact.sh"
 
 def _workflow() -> dict:
     return yaml.load(WORKFLOW_PATH.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+
+
+def _load_workflow(path: Path) -> dict:
+    return yaml.load(path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
 
 
 def _needs(job: dict) -> set[str]:
@@ -50,7 +58,8 @@ def test_release_graph_gates_both_builds_and_publication_on_verification():
     assert "workflow_dispatch" not in workflow["on"]
     assert _needs(jobs["linux"]) == {"verify"}
     assert _needs(jobs["macos"]) == {"verify"}
-    assert _needs(jobs["publish"]) == {"verify", "linux", "macos"}
+    assert _needs(jobs["sbom"]) == {"linux", "macos"}
+    assert _needs(jobs["publish"]) == {"verify", "linux", "macos", "sbom"}
     assert _needs(jobs["homebrew"]) == {"publish"}
 
     _, gate = _named_step(jobs["verify"], "Verify immutable tag and main commit")
@@ -91,7 +100,52 @@ def test_release_credentials_fail_fast_before_verification_builds():
     assert ".permissions.push" in credentials["run"]
     assert ".allow_auto_merge" in credentials["run"]
     assert 'GH_TOKEN="${HOMEBREW_TAP_TOKEN}" gh pr list' in credentials["run"]
+    assert "openssl pkcs12" in credentials["run"]
+    assert "-passin env:MACOS_CERTIFICATE_PASSWORD" in credentials["run"]
     assert "set -x" not in credentials["run"]
+
+
+def test_development_nuitka_builds_are_manual_and_cancel_superseded_runs():
+    workflow = _load_workflow(DEVELOPMENT_BINARIES_WORKFLOW_PATH)
+
+    assert set(workflow["on"]) == {"workflow_dispatch"}
+    assert workflow["concurrency"]["cancel-in-progress"] == "true"
+    assert "github.repository" in workflow["concurrency"]["group"]
+    assert "github.ref" in workflow["concurrency"]["group"]
+    scripts = {
+        entry["script"]
+        for entry in workflow["jobs"]["build-unsigned"]["strategy"]["matrix"]["include"]
+    }
+    assert scripts == {
+        "scripts/build_nuitka_linux.sh",
+        "scripts/build_nuitka_macos.sh",
+    }
+
+
+def test_manual_release_preflight_is_cheap_and_validates_shared_secrets():
+    workflow = _load_workflow(PREFLIGHT_WORKFLOW_PATH)
+    job = workflow["jobs"]["credentials"]
+    _, step = _named_step(job, "Validate signing, notarization, and Homebrew access")
+
+    assert set(workflow["on"]) == {"workflow_dispatch"}
+    assert job["runs-on"] == "ubuntu-24.04"
+    assert job["timeout-minutes"] == "10"
+    assert len(job["steps"]) == 1
+    assert "actions/checkout" not in str(job)
+    assert "build_nuitka" not in str(job)
+    assert "APPLE_CERTIFICATE_BASE64" in step["env"]["MACOS_CERTIFICATE_P12_BASE64"]
+    assert "APPLE_CERTIFICATE_PASSWORD" in step["env"]["MACOS_CERTIFICATE_PASSWORD"]
+    assert step["env"]["GH_TOKEN"] == "${{ secrets.HOMEBREW_TAP_TOKEN_2 }}"
+    for name in ("APPLE_ID", "APPLE_ID_PASSWORD", "APPLE_TEAM_ID"):
+        assert name in step["env"]
+        assert name in step["run"]
+    assert "openssl pkcs12" in step["run"]
+    assert "-passin env:MACOS_CERTIFICATE_PASSWORD" in step["run"]
+    assert "APPLE_ID_PASSWORD" in step["run"]
+    assert ".permissions.push" in step["run"]
+    assert ".allow_auto_merge" in step["run"]
+    assert "gh pr list" in step["run"]
+    assert "set -x" not in step["run"]
 
 
 def test_normal_ci_gates_both_dev_and_main_pushes():
@@ -142,36 +196,39 @@ def test_scorecard_write_permissions_are_scoped_to_its_job():
     }
 
 
-def test_release_jobs_verify_final_archives_before_sbom_and_publish():
+def test_release_jobs_verify_archives_before_separate_sbom_and_publish():
     jobs = _workflow()["jobs"]
 
     linux_verify_index, linux_verify = _named_step(jobs["linux"], "Verify final Linux archive")
-    linux_stage_index, linux_stage = _named_step(
-        jobs["linux"], "Extract final Linux artifact for SBOM"
-    )
-    linux_sbom_index, linux_sbom = _named_step(jobs["linux"], "Generate Linux SBOM")
-    assert linux_verify_index < linux_stage_index < linux_sbom_index
-    assert "-linux-x86_64.tar.gz" in linux_stage["run"]
-    assert "tar -xzf" in linux_stage["run"]
-    assert linux_sbom["with"]["path"] == "${{ runner.temp }}/sbom-linux-x86_64"
+    assert linux_verify_index < len(jobs["linux"]["steps"])
     assert "catalog verify" in linux_verify["run"]
     assert '"$BINARY_NAME ${RELEASE_TAG#v}"' in linux_verify["run"]
+    assert "anchore/sbom-action" not in str(jobs["linux"])
 
     notarize_index, notarize = _named_step(jobs["macos"], "Codesign and notarize macOS asset")
     mac_verify_index, mac_verify = _named_step(jobs["macos"], "Verify final notarized macOS archive")
-    mac_stage_index, mac_stage = _named_step(
-        jobs["macos"], "Extract final macOS artifact for SBOM"
-    )
-    mac_sbom_index, mac_sbom = _named_step(jobs["macos"], "Generate macOS SBOM")
-    assert notarize_index < mac_verify_index < mac_stage_index < mac_sbom_index
+    assert notarize_index < mac_verify_index
     assert "--keepParent" not in notarize["run"]
     assert "--norsrc --noextattr --noqtn --noacl" in notarize["run"]
     assert "cd dist" in notarize["run"]
     assert mac_verify["run"].startswith("bash scripts/verify_macos_artifact.sh")
     assert '"${RELEASE_TAG#v}"' in mac_verify["run"]
-    assert "-macos-arm64.zip" in mac_stage["run"]
-    assert "ditto -x -k" in mac_stage["run"]
+    assert "anchore/sbom-action" not in str(jobs["macos"])
+
+    sbom = jobs["sbom"]
+    _, download = _named_step(sbom, "Extract verified release artifacts for SBOM")
+    _, linux_sbom = _named_step(sbom, "Generate Linux SBOM")
+    _, mac_sbom = _named_step(sbom, "Generate macOS SBOM")
+    assert sbom["runs-on"] == "ubuntu-24.04"
+    assert sbom["timeout-minutes"] == "15"
+    assert "-linux-x86_64.tar.gz" in download["run"]
+    assert "tar --no-same-owner --no-same-permissions" in download["run"]
+    assert "-macos-arm64.zip" in download["run"]
+    assert "unzip -q" in download["run"]
+    assert linux_sbom["with"]["path"] == "${{ runner.temp }}/sbom-linux-x86_64"
     assert mac_sbom["with"]["path"] == "${{ runner.temp }}/sbom-macos-arm64"
+    assert linux_sbom["with"]["output-file"].startswith("sbom-output/")
+    assert mac_sbom["with"]["output-file"].startswith("sbom-output/")
 
     checksum_index, checksum = _named_step(jobs["publish"], "Generate checksums")
     attest_index, _ = _named_step(jobs["publish"], "Generate artifact provenance attestations")
@@ -329,6 +386,24 @@ def test_every_checkout_disables_persisted_credentials():
 
 def test_every_release_shell_block_is_syntactically_valid_bash():
     workflow = _workflow()
+    for job_name, job in workflow["jobs"].items():
+        for step in job.get("steps", []):
+            command = step.get("run")
+            if not command:
+                continue
+            result = subprocess.run(
+                ["bash", "-n", "-c", command],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            assert result.returncode == 0, (
+                f"invalid shell in {job_name}/{step.get('name', 'unnamed')}: {result.stderr}"
+            )
+
+
+def test_manual_preflight_shell_block_is_syntactically_valid_bash():
+    workflow = _load_workflow(PREFLIGHT_WORKFLOW_PATH)
     for job_name, job in workflow["jobs"].items():
         for step in job.get("steps", []):
             command = step.get("run")

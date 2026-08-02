@@ -1,0 +1,72 @@
+name: Release Preflight
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-preflight-${{ github.repository }}
+  cancel-in-progress: true
+
+env:
+  HOMEBREW_TAP_REPO: bluearchio/homebrew-tap
+
+jobs:
+  credentials:
+    name: Validate release credentials
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Validate signing, notarization, and Homebrew access
+        shell: bash
+        env:
+          MACOS_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 || secrets.APPLE_CERTIFICATE_BASE64 || secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD || secrets.APPLE_CERTIFICATE_PASSWORD || secrets.MACOS_CERTIFICATE_PWD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD || secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN_2 }}
+        run: |
+          set -euo pipefail
+          for name in \
+            MACOS_CERTIFICATE_P12_BASE64 \
+            MACOS_CERTIFICATE_PASSWORD \
+            APPLE_ID \
+            APPLE_ID_PASSWORD \
+            APPLE_TEAM_ID \
+            GH_TOKEN; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::Missing required release credential: $name"
+              exit 1
+            fi
+          done
+
+          certificate_path="$(mktemp)"
+          trap 'rm -f "$certificate_path"' EXIT
+          if ! printf '%s' "$MACOS_CERTIFICATE_P12_BASE64" \
+            | tr -d '[:space:]' \
+            | base64 --decode > "$certificate_path"; then
+            echo "::error::The macOS signing certificate is not valid base64."
+            exit 1
+          fi
+          if ! openssl pkcs12 \
+            -legacy \
+            -in "$certificate_path" \
+            -passin env:MACOS_CERTIFICATE_PASSWORD \
+            -noout >/dev/null 2>&1; then
+            echo "::error::The macOS signing certificate or its password is invalid."
+            exit 1
+          fi
+
+          tap_access="$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${HOMEBREW_TAP_REPO}" \
+            --jq '[.full_name, (.permissions.push // false), (.allow_auto_merge // false)] | @tsv')"
+          if [[ "$tap_access" != "${HOMEBREW_TAP_REPO}"$'\ttrue\ttrue' ]]; then
+            echo "::error::The Homebrew tap token needs push access and auto-merge must be enabled."
+            exit 1
+          fi
+          gh pr list --repo "$HOMEBREW_TAP_REPO" --state open --limit 1 >/dev/null
+          echo "::notice::Release credential preflight passed. No binaries were built."
