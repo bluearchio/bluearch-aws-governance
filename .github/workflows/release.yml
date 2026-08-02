@@ -235,7 +235,11 @@ jobs:
           codesign --force --timestamp --options runtime --entitlements entitlements.plist --sign "$MACOS_CODESIGN_IDENTITY" --keychain "$KEYCHAIN_PATH" "dist/$BINARY_NAME"
           codesign --verify --strict --verbose=2 "dist/$BINARY_NAME"
           mkdir -p artifacts
-          ditto -c -k --keepParent "dist/$BINARY_NAME" "artifacts/$BINARY_NAME-macos-arm64.zip"
+          (
+            cd dist
+            ditto -c -k --norsrc --noextattr --noqtn --noacl \
+              "$BINARY_NAME" "../artifacts/$BINARY_NAME-macos-arm64.zip"
+          )
           if [[ -n "${APPLE_API_KEY_ID:-}" && -n "${APPLE_API_ISSUER_ID:-}" && -f "$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8" ]]; then
             xcrun notarytool submit "artifacts/$BINARY_NAME-macos-arm64.zip" \
               --key "$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8" \
@@ -254,7 +258,7 @@ jobs:
           fi
       - name: Verify final notarized macOS archive
         shell: bash
-        run: bash scripts/verify_macos_artifact.sh "artifacts/$BINARY_NAME-macos-arm64.zip" "$BINARY_NAME"
+        run: bash scripts/verify_macos_artifact.sh "artifacts/$BINARY_NAME-macos-arm64.zip" "$BINARY_NAME" "${RELEASE_TAG#v}"
       - name: Generate macOS SBOM
         uses: anchore/sbom-action@v0.24.0
         with:
@@ -277,6 +281,7 @@ jobs:
     permissions:
       contents: write
       attestations: write
+      artifact-metadata: write
       id-token: write
     steps:
       - uses: actions/checkout@v4

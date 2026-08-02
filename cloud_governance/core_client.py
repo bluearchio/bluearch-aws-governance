@@ -159,7 +159,8 @@ def _format_core_update_message(app_name: str, status: dict[str, Any], minimum_v
         f"bluearch-aws-core {core_version} is too old for {app_label}. "
         f"Required version: >= {minimum_version}. "
         "Install or update BlueArch AWS Core with your installer, or with Homebrew: "
-        "`brew install bluearchio/tap/bluearch-aws-core`; then restart it with "
+        "`brew trust --formula bluearchio/tap/bluearch-aws-core`, then "
+        "`brew install bluearchio/tap/bluearch-aws-core`; restart it with "
         "`bluearch-aws-core start --daemon`."
     )
 

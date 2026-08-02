@@ -50,10 +50,17 @@ def test_health_identifies_public_governance_service(monkeypatch):
 def test_customer_docs_use_formula_specific_trust_and_public_commands():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
+    installer = (ROOT / "scripts/install-linux.sh").read_text(encoding="utf-8")
 
     assert "brew trust --formula bluearchio/tap/bluearch-aws-core" in readme
     assert "brew trust --formula bluearchio/tap/bluearch-aws-governance" in readme
     assert "brew install bluearchio/tap/bluearch-aws-governance" in readme
+    assert readme.index("brew trust --formula bluearchio/tap/bluearch-aws-core") < readme.index(
+        "brew install bluearchio/tap/bluearch-aws-governance"
+    )
+    assert readme.index("brew trust --formula bluearchio/tap/bluearch-aws-governance") < readme.index(
+        "brew install bluearchio/tap/bluearch-aws-governance"
+    )
     assert "bluearch-aws-governance catalog import" in readme
     assert "bluearch-aws-governance catalog summary" in readme
     assert "brew trust bluearchio/tap" not in readme
@@ -63,6 +70,15 @@ def test_customer_docs_use_formula_specific_trust_and_public_commands():
     assert "bluearch-core " not in readme
     assert "cloud-governance " not in contributing
     assert "bluearch-core " not in contributing
+    assert "brew trust --formula bluearchio/tap/bluearch-aws-core" in installer
+    assert "brew trust --formula bluearchio/tap/bluearch-aws-governance" in installer
+    assert "brew install bluearchio/tap/bluearch-aws-governance" in installer
+    assert installer.index("brew trust --formula bluearchio/tap/bluearch-aws-core") < installer.index(
+        "install bluearchio/tap/bluearch-aws-governance"
+    )
+    assert installer.index("brew trust --formula bluearchio/tap/bluearch-aws-governance") < installer.index(
+        "install bluearchio/tap/bluearch-aws-governance"
+    )
 
 
 def test_setup_view_lists_only_registered_public_core_commands():

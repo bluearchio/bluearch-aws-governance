@@ -34,6 +34,26 @@ def test_version_option_without_subcommand():
     assert result.stdout.strip()
 
 
+@pytest.mark.parametrize("command", [["doctor"], ["catalog", "summary"]])
+def test_core_install_recovery_trusts_exact_formula_before_install(monkeypatch, command):
+    class UnavailableCore:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def dependency_status(self):
+            raise RuntimeError("core unavailable")
+
+    monkeypatch.setattr(cli, "CoreClient", UnavailableCore)
+
+    result = runner.invoke(cli.app, command)
+
+    trust = "brew trust --formula bluearchio/tap/bluearch-aws-core"
+    install = "brew install bluearchio/tap/bluearch-aws-core"
+    assert result.exit_code == 1
+    assert trust in result.stdout
+    assert result.stdout.index(trust) < result.stdout.index(install)
+
+
 def test_direct_web_start_is_hidden_and_requires_core_managed_start(monkeypatch):
     root_help = runner.invoke(cli.app, ["--help"])
     assert root_help.exit_code == 0

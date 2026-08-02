@@ -81,6 +81,7 @@ def doctor():
         console.print(f"[dim]{exc}[/dim]")
         console.print(f"[cyan]Required version:[/cyan] {PUBLIC_CORE_EXECUTABLE} >= {MINIMUM_CORE_VERSION}")
         console.print(f"[cyan]Start it with:[/cyan] {PUBLIC_CORE_EXECUTABLE} start --daemon")
+        console.print("[cyan]Trust it with:[/cyan] brew trust --formula bluearchio/tap/bluearch-aws-core")
         console.print("[cyan]Install it with:[/cyan] brew install bluearchio/tap/bluearch-aws-core")
         raise typer.Exit(1) from exc
     console.print("[green]bluearch-aws-core is available[/green]")
@@ -256,6 +257,7 @@ def _ensure_core_dependency() -> None:
         console.print(f"[dim]{exc}[/dim]")
         console.print(f"[cyan]Required version:[/cyan] {PUBLIC_CORE_EXECUTABLE} >= {MINIMUM_CORE_VERSION}")
         console.print(f"[cyan]Start it with:[/cyan] {PUBLIC_CORE_EXECUTABLE} start --daemon")
+        console.print("[cyan]Trust it with:[/cyan] brew trust --formula bluearchio/tap/bluearch-aws-core")
         console.print("[cyan]Install it with:[/cyan] brew install bluearchio/tap/bluearch-aws-core")
         raise typer.Exit(1) from exc
 
