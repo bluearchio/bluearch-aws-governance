@@ -449,23 +449,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          release_endpoint="repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}"
-          if release_id="$(gh api "$release_endpoint" --jq '.id' 2>/dev/null)"; then
-            release_is_draft="$(gh api "$release_endpoint" --jq '.draft')"
-            if [[ "$release_is_draft" == "true" ]]; then
-              echo "::notice::Resuming existing draft release $RELEASE_TAG."
-            elif [[ "$release_is_draft" == "false" ]]; then
-              echo "::notice::Release $RELEASE_TAG is already public; verifying it without mutation."
-            else
-              echo "::error::Unexpected draft state for release $RELEASE_TAG."
-              exit 1
-            fi
+          release_exists=false
+          if release_info="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json databaseId,isDraft,tagName --jq '[.databaseId, .tagName, .isDraft] | @tsv' 2>/dev/null)"; then
+            release_exists=true
           else
             gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --draft --verify-tag --title "$RELEASE_TAG" --generate-notes
-            release_id="$(gh api "$release_endpoint" --jq '.id')"
-            release_is_draft=true
+            release_info="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json databaseId,isDraft,tagName --jq '[.databaseId, .tagName, .isDraft] | @tsv')"
           fi
+          IFS=$'\t' read -r release_id release_tag release_is_draft <<< "$release_info"
           [[ "$release_id" =~ ^[0-9]+$ ]] || { echo "::error::Invalid GitHub release id"; exit 1; }
+          [[ "$release_tag" == "$RELEASE_TAG" ]] || { echo "::error::Release tag identity mismatch"; exit 1; }
+          [[ "$release_is_draft" == "true" || "$release_is_draft" == "false" ]] || { echo "::error::Unexpected draft state for release $RELEASE_TAG."; exit 1; }
+          if [[ "$release_is_draft" == "true" ]]; then
+            if [[ "$release_exists" == "true" ]]; then
+              echo "::notice::Resuming existing draft release $RELEASE_TAG."
+            fi
+          else
+            echo "::notice::Release $RELEASE_TAG is already public; verifying it without mutation."
+          fi
 
           if [[ "$release_is_draft" == "true" ]]; then
             gh release upload "$RELEASE_TAG" release-assets/* --repo "$GITHUB_REPOSITORY" --clobber

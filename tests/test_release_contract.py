@@ -272,10 +272,25 @@ def test_release_publication_is_resumable_and_never_mutates_public_assets():
     )
     commands = release["run"]
 
-    assert 'release_endpoint="repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}"' in commands
-    assert 'release_is_draft="$(gh api "$release_endpoint" --jq \'.draft\')"' in commands
+    release_view = (
+        'gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" '
+        "--json databaseId,isDraft,tagName"
+    )
+
+    assert 'releases/tags/${RELEASE_TAG}' not in commands
+    assert commands.count(release_view) == 2
+    assert "release_exists=false" in commands
+    assert 'if release_info="$(gh release view' in commands
+    assert commands.index(release_view) < commands.index('gh release create "$RELEASE_TAG"')
+    assert commands.index('gh release create "$RELEASE_TAG"') < commands.rindex(release_view)
+    assert "[.databaseId, .tagName, .isDraft] | @tsv" in commands
+    assert "IFS=$'\\t' read -r release_id release_tag release_is_draft" in commands
+    assert '[[ "$release_id" =~ ^[0-9]+$ ]]' in commands
+    assert '[[ "$release_tag" == "$RELEASE_TAG" ]]' in commands
+    assert '[[ "$release_is_draft" == "true" || "$release_is_draft" == "false" ]]' in commands
     assert 'if [[ "$release_is_draft" == "true" ]]' in commands
     assert 'gh release upload "$RELEASE_TAG" release-assets/* --repo "$GITHUB_REPOSITORY" --clobber' in commands
+    assert 'Resuming existing draft release $RELEASE_TAG.' in commands
     assert 'Release $RELEASE_TAG is already public; verifying it without mutation.' in commands
     assert 'select(.state == "uploaded") | [.name, .digest]' in commands
     assert 'diff -q "$expected_assets" "$remote_assets"' in commands
@@ -424,7 +439,7 @@ def test_manual_preflight_shell_block_is_syntactically_valid_bash():
 
 @pytest.mark.parametrize(
     "value",
-    ["0.2.4", "v0.2", "v0.2.4-rc1", "main", "", " v0.2.4 "],
+    ["0.2.5", "v0.2", "v0.2.5-rc1", "main", "", " v0.2.5 "],
 )
 def test_release_version_setter_rejects_noncanonical_tags(value):
     with pytest.raises(ValueError):
@@ -432,13 +447,13 @@ def test_release_version_setter_rejects_noncanonical_tags(value):
 
 
 def test_release_version_setter_returns_bare_pep440_version():
-    assert normalize_release_tag("v0.2.4") == "0.2.4"
+    assert normalize_release_tag("v0.2.5") == "0.2.5"
 
     metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     namespace: dict[str, str] = {}
     exec((ROOT / "cloud_governance/__init__.py").read_text(encoding="utf-8"), namespace)
-    assert metadata["project"]["version"] == "0.2.4"
-    assert namespace["__version__"] == "0.2.4"
+    assert metadata["project"]["version"] == "0.2.5"
+    assert namespace["__version__"] == "0.2.5"
 
 
 def test_release_version_setter_writes_bare_version_to_both_metadata_files(tmp_path):
@@ -475,7 +490,7 @@ def test_macos_verifier_rejects_unsigned_final_archive(tmp_path):
     staging = tmp_path / "dist"
     staging.mkdir()
     unsigned = staging / "bluearch-aws-governance"
-    unsigned.write_text("#!/bin/sh\necho bluearch-aws-governance 0.2.4\n", encoding="utf-8")
+    unsigned.write_text("#!/bin/sh\necho bluearch-aws-governance 0.2.5\n", encoding="utf-8")
     unsigned.chmod(0o755)
     archive = tmp_path / "bluearch-aws-governance-macos-arm64.zip"
     subprocess.run(
@@ -500,7 +515,7 @@ def test_macos_verifier_rejects_unsigned_final_archive(tmp_path):
             os.fspath(MACOS_VERIFIER),
             os.fspath(archive),
             "bluearch-aws-governance",
-            "0.2.4",
+            "0.2.5",
         ],
         cwd=ROOT,
         capture_output=True,
@@ -544,7 +559,7 @@ def test_macos_verifier_inspects_archive_before_extraction(tmp_path):
             os.fspath(MACOS_VERIFIER),
             os.fspath(archive),
             "bluearch-aws-governance",
-            "0.2.4",
+            "0.2.5",
         ],
         cwd=ROOT,
         capture_output=True,
