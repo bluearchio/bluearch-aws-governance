@@ -92,6 +92,23 @@ jobs:
             fi
           done
 
+          certificate_path="$(mktemp)"
+          trap 'rm -f "$certificate_path"' EXIT
+          if ! printf '%s' "$MACOS_CERTIFICATE_P12_BASE64" \
+            | tr -d '[:space:]' \
+            | base64 --decode > "$certificate_path"; then
+            echo "::error::The macOS signing certificate is not valid base64."
+            exit 1
+          fi
+          if ! openssl pkcs12 \
+            -legacy \
+            -in "$certificate_path" \
+            -passin env:MACOS_CERTIFICATE_PASSWORD \
+            -noout >/dev/null 2>&1; then
+            echo "::error::The macOS signing certificate or its password is invalid."
+            exit 1
+          fi
+
           api_key_ready=false
           apple_id_ready=false
           if [[ -n "${APPLE_API_KEY_P8_BASE64:-}" && \
@@ -181,23 +198,6 @@ jobs:
           test "$("$verify_dir/$BINARY_NAME" --version)" = "$BINARY_NAME ${RELEASE_TAG#v}"
           "$verify_dir/$BINARY_NAME" --help >/dev/null
           "$verify_dir/$BINARY_NAME" catalog verify
-      - name: Extract final Linux artifact for SBOM
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/sbom-linux-x86_64"
-          tar -xzf "artifacts/$BINARY_NAME-linux-x86_64.tar.gz" \
-            -C "$RUNNER_TEMP/sbom-linux-x86_64" \
-            --no-same-owner --no-same-permissions
-          test -x "$RUNNER_TEMP/sbom-linux-x86_64/$BINARY_NAME"
-      - name: Generate Linux SBOM
-        uses: anchore/sbom-action@v0.24.0
-        with:
-          path: ${{ runner.temp }}/sbom-linux-x86_64
-          format: cyclonedx-json
-          output-file: artifacts/${{ env.BINARY_NAME }}-linux-x86_64.cyclonedx.json
-          upload-artifact: false
-          upload-release-assets: false
       - uses: actions/upload-artifact@v4
         with:
           name: release-linux-x86_64
@@ -327,32 +327,64 @@ jobs:
       - name: Verify final notarized macOS archive
         shell: bash
         run: bash scripts/verify_macos_artifact.sh "artifacts/$BINARY_NAME-macos-arm64.zip" "$BINARY_NAME" "${RELEASE_TAG#v}"
-      - name: Extract final macOS artifact for SBOM
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/sbom-macos-arm64"
-          ditto -x -k "artifacts/$BINARY_NAME-macos-arm64.zip" \
-            "$RUNNER_TEMP/sbom-macos-arm64"
-          test -x "$RUNNER_TEMP/sbom-macos-arm64/$BINARY_NAME"
-      - name: Generate macOS SBOM
-        uses: anchore/sbom-action@v0.24.0
-        with:
-          path: ${{ runner.temp }}/sbom-macos-arm64
-          format: cyclonedx-json
-          output-file: artifacts/${{ env.BINARY_NAME }}-macos-arm64.cyclonedx.json
-          upload-artifact: false
-          upload-release-assets: false
       - uses: actions/upload-artifact@v4
         with:
           name: release-macos-arm64
           path: artifacts/*
           if-no-files-found: error
 
+  sbom:
+    name: Generate release SBOMs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    needs: [linux, macos]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: release-inputs
+          merge-multiple: true
+      - name: Extract verified release artifacts for SBOM
+        shell: bash
+        run: |
+          set -euo pipefail
+          linux_dir="$RUNNER_TEMP/sbom-linux-x86_64"
+          macos_dir="$RUNNER_TEMP/sbom-macos-arm64"
+          mkdir -p "$linux_dir" "$macos_dir" sbom-output
+          tar --no-same-owner --no-same-permissions \
+            -xzf "release-inputs/$BINARY_NAME-linux-x86_64.tar.gz" \
+            -C "$linux_dir"
+          unzip -q "release-inputs/$BINARY_NAME-macos-arm64.zip" -d "$macos_dir"
+          test -x "$linux_dir/$BINARY_NAME"
+          test -f "$macos_dir/$BINARY_NAME"
+      - name: Generate Linux SBOM
+        uses: anchore/sbom-action@v0.24.0
+        with:
+          path: ${{ runner.temp }}/sbom-linux-x86_64
+          format: cyclonedx-json
+          output-file: sbom-output/${{ env.BINARY_NAME }}-linux-x86_64.cyclonedx.json
+          upload-artifact: false
+          upload-release-assets: false
+      - name: Generate macOS SBOM
+        uses: anchore/sbom-action@v0.24.0
+        with:
+          path: ${{ runner.temp }}/sbom-macos-arm64
+          format: cyclonedx-json
+          output-file: sbom-output/${{ env.BINARY_NAME }}-macos-arm64.cyclonedx.json
+          upload-artifact: false
+          upload-release-assets: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-sboms
+          path: sbom-output/*
+          if-no-files-found: error
+
   publish:
     name: Publish signed release
     runs-on: ubuntu-24.04
-    needs: [verify, linux, macos]
+    needs: [verify, linux, macos, sbom]
     if: startsWith(github.ref_name, 'v')
     permissions:
       contents: write
