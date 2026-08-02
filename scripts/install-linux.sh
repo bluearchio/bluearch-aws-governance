@@ -13,7 +13,17 @@ CORE_REPO="bluearchio/bluearch-aws-core"
 CORE_BINARY_NAME="bluearch-aws-core"
 CORE_ASSET_NAME="bluearch-aws-core-linux-x86_64.tar.gz"
 CORE_VERSION="${BLUEARCH_CORE_VERSION:-latest}"
+MINIMUM_CORE_VERSION="0.2.6"
 CORE_INSTALL_POLICY="${BLUEARCH_INSTALL_CORE:-missing}"
+TEMP_DIRS=()
+
+cleanup() {
+  local path
+  for path in "${TEMP_DIRS[@]}"; do
+    [[ -n "$path" && -d "$path" ]] && rm -rf "$path"
+  done
+}
+trap cleanup EXIT
 
 log() {
   printf '[bluearch] %s\n' "$*"
@@ -32,12 +42,38 @@ require_command() {
   command -v "$1" >/dev/null 2>&1 || fail "Missing required command: $1"
 }
 
+canonical_release_version() {
+  local version="$1"
+  case "$version" in
+    latest) printf '%s' "$version" ;;
+    v[0-9]*.[0-9]*.[0-9]*)
+      [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || \
+        fail "Release version must be latest, X.Y.Z, or vX.Y.Z: ${version}"
+      printf '%s' "$version"
+      ;;
+    [0-9]*.[0-9]*.[0-9]*)
+      [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || \
+        fail "Release version must be latest, X.Y.Z, or vX.Y.Z: ${version}"
+      printf 'v%s' "$version"
+      ;;
+    *) fail "Release version must be latest, X.Y.Z, or vX.Y.Z: ${version}" ;;
+  esac
+}
+
 release_base_url() {
   local repo="$1"
-  local version="$2"
+  local version
   local project="${repo##*/}"
-  local dist_base="${BLUEARCH_DIST_BASE_URL:-https://dist.bluearch.io}"
-  printf '%s/releases/%s/%s' "${dist_base%/}" "$project" "$version"
+  local mirror_base="${BLUEARCH_DIST_BASE_URL:-}"
+  version="$(canonical_release_version "$2")" || return 1
+
+  if [[ -n "$mirror_base" ]]; then
+    printf '%s/releases/%s/%s' "${mirror_base%/}" "$project" "$version"
+  elif [[ "$version" == "latest" ]]; then
+    printf 'https://github.com/%s/releases/latest/download' "$repo"
+  else
+    printf 'https://github.com/%s/releases/download/%s' "$repo" "$version"
+  fi
 }
 
 download_file() {
@@ -55,14 +91,28 @@ verify_checksum() {
   local checksums_file="$1"
   local asset_name="$2"
   local selected_file="$3"
+  local matching_rows
+  local matching_count
 
-  awk -v asset="$asset_name" '$2 == asset { print }' "$checksums_file" > "$selected_file"
-  if [[ ! -s "$selected_file" ]]; then
-    warn "SHA256SUMS did not contain ${asset_name}; continuing without checksum verification"
-    return
-  fi
+  matching_rows="$(awk -v asset="$asset_name" '
+    $2 == asset || $2 == "*" asset { print }
+  ' "$checksums_file")"
+  matching_count="$(printf '%s\n' "$matching_rows" | awk 'NF { count += 1 } END { print count + 0 }')"
+  [[ "$matching_count" == "1" ]] || fail "SHA256SUMS must contain exactly one row for ${asset_name}; found ${matching_count}"
 
-  sha256sum -c "$selected_file"
+  printf '%s\n' "$matching_rows" > "$selected_file"
+  (cd "$(dirname "$checksums_file")" && sha256sum -c "$(basename "$selected_file")") || \
+    fail "Checksum verification failed for ${asset_name}"
+}
+
+verify_archive_layout() {
+  local archive_path="$1"
+  local binary_name="$2"
+  local listing
+
+  listing="$(tar -tzf "$archive_path")" || fail "Unable to read archive ${archive_path}"
+  [[ "$listing" == "$binary_name" ]] || \
+    fail "Archive must contain exactly one root executable named ${binary_name}"
 }
 
 install_release() {
@@ -74,40 +124,83 @@ install_release() {
   local base_url
   local tmp_dir
 
-  base_url="$(release_base_url "$repo" "$version")"
+  base_url="$(release_base_url "$repo" "$version")" || return 1
   tmp_dir="$(mktemp -d)"
+  TEMP_DIRS+=("$tmp_dir")
 
   log "Downloading ${app_name} (${version})..."
-  download_file "${base_url}/${asset_name}" "${tmp_dir}/${asset_name}"
+  download_file "${base_url}/${asset_name}" "${tmp_dir}/${asset_name}" || \
+    fail "Unable to download ${asset_name}"
 
-  if download_file "${base_url}/SHA256SUMS" "${tmp_dir}/SHA256SUMS"; then
-    (cd "$tmp_dir" && verify_checksum "SHA256SUMS" "$asset_name" "SHA256SUMS.selected")
-  else
-    warn "Could not download SHA256SUMS; continuing without checksum verification"
-  fi
+  download_file "${base_url}/SHA256SUMS" "${tmp_dir}/SHA256SUMS" || \
+    fail "Unable to download required SHA256SUMS"
+  verify_checksum "${tmp_dir}/SHA256SUMS" "$asset_name" "${tmp_dir}/SHA256SUMS.selected"
+  verify_archive_layout "${tmp_dir}/${asset_name}" "$binary_name"
 
   mkdir -p "${tmp_dir}/extract"
   tar -xzf "${tmp_dir}/${asset_name}" -C "${tmp_dir}/extract"
 
   local extracted_binary="${tmp_dir}/extract/${binary_name}"
-  if [[ ! -f "$extracted_binary" ]]; then
-    extracted_binary="$(find "${tmp_dir}/extract" -type f -name "$binary_name" | head -n 1)"
-  fi
-  [[ -n "${extracted_binary:-}" && -f "$extracted_binary" ]] || fail "Archive did not contain ${binary_name}"
+  [[ -f "$extracted_binary" && ! -L "$extracted_binary" && -x "$extracted_binary" ]] || \
+    fail "Archive did not contain an executable root file named ${binary_name}"
 
   mkdir -p "$INSTALL_DIR"
   install -m 0755 "$extracted_binary" "${INSTALL_DIR}/${binary_name}"
-  rm -rf "$tmp_dir"
   log "Installed ${binary_name} to ${INSTALL_DIR}/${binary_name}"
 }
 
-binary_available() {
-  command -v "$1" >/dev/null 2>&1 || [[ -x "${INSTALL_DIR}/$1" ]]
+version_at_least() {
+  local actual="$1"
+  local minimum="$2"
+  local actual_major actual_minor actual_patch
+  local minimum_major minimum_minor minimum_patch
+  IFS=. read -r actual_major actual_minor actual_patch <<< "$actual"
+  IFS=. read -r minimum_major minimum_minor minimum_patch <<< "$minimum"
+  actual_major=$((10#$actual_major))
+  actual_minor=$((10#$actual_minor))
+  actual_patch=$((10#$actual_patch))
+  minimum_major=$((10#$minimum_major))
+  minimum_minor=$((10#$minimum_minor))
+  minimum_patch=$((10#$minimum_patch))
+
+  (( actual_major > minimum_major )) || {
+    (( actual_major == minimum_major )) || return 1
+    (( actual_minor > minimum_minor )) || {
+      (( actual_minor == minimum_minor )) || return 1
+      (( actual_patch >= minimum_patch ))
+    }
+  }
+}
+
+compatible_core_available() {
+  local path
+  local resolved
+  local output
+  local first_line
+  local version
+  local path_candidate=""
+
+  path_candidate="$(command -v "$CORE_BINARY_NAME" 2>/dev/null || true)"
+  for path in "$path_candidate" "${INSTALL_DIR}/${CORE_BINARY_NAME}"; do
+    [[ -n "$path" && -x "$path" ]] || continue
+    resolved="$(readlink -f -- "$path" 2>/dev/null || true)"
+    [[ -n "$resolved" && -f "$resolved" && -x "$resolved" ]] || continue
+    [[ "$(basename "$resolved")" == "$CORE_BINARY_NAME" ]] || continue
+    output="$("$resolved" --version 2>/dev/null)" || continue
+    first_line="${output%%$'\n'*}"
+    [[ "$first_line" == "${CORE_BINARY_NAME} "* ]] || continue
+    version="${first_line#"${CORE_BINARY_NAME} "}"
+    [[ "$version" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]] || continue
+    version="${version#v}"
+    version_at_least "$version" "$MINIMUM_CORE_VERSION" || continue
+    return 0
+  done
+  return 1
 }
 
 case "$(uname -s)" in
   Linux) ;;
-  *) fail "This installer supports Linux only. On macOS, use: brew install bluearchio/tap/bluearch-aws-governance" ;;
+  *) fail "This installer supports Linux only. On macOS, run 'brew trust --formula bluearchio/tap/bluearch-aws-core' and 'brew trust --formula bluearchio/tap/bluearch-aws-governance', then run 'brew install bluearchio/tap/bluearch-aws-governance'." ;;
 esac
 
 case "$(uname -m)" in
@@ -119,14 +212,17 @@ require_command curl
 require_command tar
 require_command sha256sum
 require_command install
+require_command readlink
 
 case "$CORE_INSTALL_POLICY" in
   always)
     install_release "$CORE_APP_NAME" "$CORE_REPO" "$CORE_VERSION" "$CORE_ASSET_NAME" "$CORE_BINARY_NAME"
+    compatible_core_available || fail "Installed ${CORE_BINARY_NAME} must be the canonical public binary at version >= ${MINIMUM_CORE_VERSION}"
     ;;
   missing)
-    if ! binary_available "$CORE_BINARY_NAME"; then
+    if ! compatible_core_available; then
       install_release "$CORE_APP_NAME" "$CORE_REPO" "$CORE_VERSION" "$CORE_ASSET_NAME" "$CORE_BINARY_NAME"
+      compatible_core_available || fail "Installed ${CORE_BINARY_NAME} must be the canonical public binary at version >= ${MINIMUM_CORE_VERSION}"
     fi
     ;;
   skip)

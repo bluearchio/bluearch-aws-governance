@@ -151,7 +151,7 @@
     <div class="section-card">
       <div class="card-title-row">
         <h3>CloudFormation Templates</h3>
-        <span class="muted">Served by bluearch-core</span>
+        <span class="muted">Served by bluearch-aws-core</span>
       </div>
       <div class="template-list">
         <div v-for="name in templateNames" :key="name" class="template-item">

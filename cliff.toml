@@ -22,7 +22,7 @@ conventional_commits = false
 filter_unconventional = false
 split_commits = false
 commit_preprocessors = [
-  { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/bluearchio/cloud-governance/issues/${2}))" },
+  { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/bluearchio/bluearch-aws-governance/issues/${2}))" },
 ]
 commit_parsers = [
   { message = "^feature", group = "Features" },

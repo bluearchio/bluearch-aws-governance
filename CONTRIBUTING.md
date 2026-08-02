@@ -8,7 +8,7 @@ Thanks for helping improve `bluearch-aws-governance`.
 python -m venv .venv
 . .venv/bin/activate
 pip install -U pip
-pip install -e . pytest httpx2
+pip install -e . pytest httpx2 PyYAML
 
 cd frontend
 npm ci
@@ -19,14 +19,14 @@ npm ci
 Start core first:
 
 ```bash
-bluearch-core start --daemon
+bluearch-aws-core start --daemon
 ```
 
-Load the catalog and run the dashboard:
+Import the catalog and run the source dashboard:
 
 ```bash
-cloud-governance catalog load
-cloud-governance web start --host 127.0.0.1 --port 8097
+bluearch-aws-governance catalog import
+make backend-dev
 ```
 
 Run the frontend:

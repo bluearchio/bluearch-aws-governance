@@ -56,7 +56,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="BlueArch Governance Hub",
         version=__version__,
-        description="Governance Hub product API backed by bluearch-core.",
+        description="Governance Hub product API backed by bluearch-aws-core.",
     )
     app.include_router(frameworks_router)
     app.include_router(misconfig_router)
@@ -70,9 +70,9 @@ def create_app() -> FastAPI:
         core = CoreClient()
         try:
             core_health = core.health()
-            return {"service": "cloud-governance", "status": "ok", "core": core_health}
+            return {"service": "bluearch-aws-governance", "status": "ok", "core": core_health}
         except Exception as exc:
-            raise HTTPException(status_code=503, detail=f"bluearch-core unavailable: {exc}") from exc
+            raise HTTPException(status_code=503, detail=f"bluearch-aws-core unavailable: {exc}") from exc
 
     @app.get("/api/v1/system/health")
     def system_health():
@@ -188,9 +188,9 @@ def create_app() -> FastAPI:
                     "profile": "",
                     "is_current": False,
                 }
-            raise HTTPException(status_code=502, detail=f"bluearch-core unavailable: {exc}") from exc
+            raise HTTPException(status_code=502, detail=f"bluearch-aws-core unavailable: {exc}") from exc
         except Exception as exc:
-            raise HTTPException(status_code=502, detail=f"bluearch-core unavailable: {exc}") from exc
+            raise HTTPException(status_code=502, detail=f"bluearch-aws-core unavailable: {exc}") from exc
 
     @app.get("/api/v1/system/templates/{template_name:path}/raw")
     def template_raw(template_name: str):
@@ -256,7 +256,7 @@ def _proxy_core(method: str, path: str, service_token: bool = True, **kwargs):
     try:
         return CoreClient().proxy(method, path, service_token=service_token, **kwargs)
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"bluearch-core unavailable: {exc}") from exc
+        raise HTTPException(status_code=502, detail=f"bluearch-aws-core unavailable: {exc}") from exc
 
 
 def _is_core_proxy_path(path: str, prefixes: tuple[str, ...]) -> bool:

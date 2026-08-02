@@ -26,27 +26,49 @@ python scripts/validate.py by-service
 
 ## Install
 
+Installing a fully qualified formula automatically adds the tap and trusts only
+that formula. Install Core explicitly first so Homebrew records trust for the
+separate dependency before resolving Governance. A separate `brew tap` or
+`brew trust` command is not needed for a first-time install. See
+[Homebrew's tap-trust documentation](https://docs.brew.sh/Tap-Trust).
+
 ```bash
-brew tap bluearchio/tap
 brew install bluearchio/tap/bluearch-aws-core
 brew install bluearchio/tap/bluearch-aws-governance
 bluearch-aws-core start --daemon
-bluearch-aws-governance catalog load
-bluearch-aws-governance web start
+bluearch-aws-governance catalog import
+bluearch-aws-governance catalog summary
+```
+
+`brew tap bluearchio/tap` only downloads and registers the repository; it does
+not grant trust. Whole-tap trust is unnecessary.
+
+### Recovery for an existing tap
+
+If an existing or partially completed installation refuses to load either
+formula, trust only Core and Governance, then retry the product installation:
+
+```bash
+brew trust --formula bluearchio/tap/bluearch-aws-core
+brew trust --formula bluearchio/tap/bluearch-aws-governance
+brew install bluearchio/tap/bluearch-aws-governance
 ```
 
 Linux:
 
 ```bash
-curl -fsSL https://dist.bluearch.io/install/bluearch-aws-governance.sh | bash
+curl -fsSL https://github.com/bluearchio/bluearch-aws-governance/releases/latest/download/install-linux.sh | bash
 export PATH="$HOME/.local/bin:$PATH"
 bluearch-aws-core start --daemon
-bluearch-aws-governance catalog load
-bluearch-aws-governance web start
+bluearch-aws-governance catalog import
+bluearch-aws-governance catalog summary
 ```
 
-The Linux installer installs `bluearch-aws-core` automatically if it is missing.
-`cloud-governance` is also installed as a shorter compatibility command.
+The Linux installer downloads verified assets directly from GitHub Releases and
+installs `bluearch-aws-core` automatically if it is missing. Set
+`BLUEARCH_VERSION=vX.Y.Z` (and optionally `BLUEARCH_CORE_VERSION=vX.Y.Z`) to pin
+an immutable release. `BLUEARCH_DIST_BASE_URL` is available only as an explicit
+mirror override; it is not used by default.
 
 From source:
 
@@ -55,7 +77,8 @@ python -m venv .venv
 . .venv/bin/activate
 pip install -e .
 bluearch-aws-core start --daemon
-bluearch-aws-governance catalog load
+bluearch-aws-governance catalog import
+bluearch-aws-governance catalog summary
 ```
 
 ## Local Development
@@ -64,8 +87,10 @@ Backend:
 
 ```bash
 . .venv/bin/activate
-bluearch-aws-governance web start --host 127.0.0.1 --port 8097
+make backend-dev
 ```
+
+The backend target uses the internal source server path. Installed dashboards are started and supervised by `bluearch-aws-core start --daemon`.
 
 Frontend:
 
@@ -110,7 +135,25 @@ gh attestation verify bluearch-aws-governance-linux-x86_64.tar.gz --repo bluearc
 
 For macOS, verify `bluearch-aws-governance-macos-arm64.zip` with `gh attestation verify`.
 
-Release workflows also open a pull request against `bluearchio/homebrew-tap` to update `bluearch-aws-governance`. Configure `HOMEBREW_TAP_TOKEN_2` before cutting a public tag.
+Before publishing, the release workflow validates that the dedicated
+cross-repository token has the required access to `bluearchio/homebrew-tap`.
+Configure that fine-grained token with least privilege: repository access only
+to the tap, with Contents and Pull requests write permissions. The tap repository
+must have auto-merge enabled, and tap `main` must protect the formula-validation
+checks as required status checks. After the
+GitHub Release is published, it checks out the tap's `main` branch with
+credentials disabled, creates or updates
+`release/bluearch-aws-governance-<tag>`, and runs the tap's
+`scripts/update_formula.py`. That script generates the immutable GitHub Release
+URL from the exact signed macOS asset and its verified SHA-256.
+
+The workflow opens a pull request against the tap's `main` branch and requests
+native GitHub auto-merge with `--auto --squash --delete-branch`. GitHub merges
+only after the protected required tap checks pass; the product workflow never
+bypasses checks or pushes directly to tap `main`. The release workflow remains
+pending until the formula pull request is actually `MERGED`; a closed pull
+request or a two-hour timeout fails the workflow. If the formula is already
+current, no pull request or auto-merge is requested.
 
 ## Security And Privacy Defaults
 
