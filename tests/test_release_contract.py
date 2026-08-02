@@ -67,6 +67,7 @@ def test_release_jobs_verify_final_archives_before_sbom_and_publish():
     assert linux_verify_index < linux_sbom_index
     assert linux_sbom["with"]["path"].endswith("-linux-x86_64.tar.gz")
     assert "catalog verify" in linux_verify["run"]
+    assert '"$BINARY_NAME ${RELEASE_TAG#v}"' in linux_verify["run"]
 
     notarize_index, notarize = _named_step(jobs["macos"], "Codesign and notarize macOS asset")
     mac_verify_index, mac_verify = _named_step(jobs["macos"], "Verify final notarized macOS archive")
@@ -175,7 +176,7 @@ def test_macos_verifier_rejects_unsigned_final_archive(tmp_path):
     staging = tmp_path / "dist"
     staging.mkdir()
     unsigned = staging / "bluearch-aws-governance"
-    unsigned.write_text("#!/bin/sh\necho 0.2.4\n", encoding="utf-8")
+    unsigned.write_text("#!/bin/sh\necho bluearch-aws-governance 0.2.4\n", encoding="utf-8")
     unsigned.chmod(0o755)
     archive = tmp_path / "bluearch-aws-governance-macos-arm64.zip"
     subprocess.run(
@@ -247,4 +248,4 @@ def test_macos_verifier_inspects_archive_before_extraction(tmp_path):
     assert result.returncode != 0
     assert "exactly one root file" in result.stderr
     assert verifier_source.index("zipfile.ZipFile") < verifier_source.index('ditto -x -k')
-    assert '"$("$BINARY_PATH" --version)" == "$EXPECTED_VERSION"' in verifier_source
+    assert '"$("$BINARY_PATH" --version)" == "$PUBLIC_BINARY_NAME $EXPECTED_VERSION"' in verifier_source

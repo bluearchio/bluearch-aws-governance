@@ -119,7 +119,7 @@ jobs:
           tar -xzf "$archive" -C "$verify_dir"
           test -x "$verify_dir/$BINARY_NAME"
           file "$verify_dir/$BINARY_NAME" | grep -E 'x86[-_]64|x86-64'
-          test "$("$verify_dir/$BINARY_NAME" --version)" = "${RELEASE_TAG#v}"
+          test "$("$verify_dir/$BINARY_NAME" --version)" = "$BINARY_NAME ${RELEASE_TAG#v}"
           "$verify_dir/$BINARY_NAME" --help >/dev/null
           "$verify_dir/$BINARY_NAME" catalog verify
       - name: Generate Linux SBOM

@@ -208,6 +208,20 @@ def test_installer_replaces_public_name_symlink_to_legacy_core(tmp_path):
     assert "0.2.6" in installed_core.read_text(encoding="utf-8")
 
 
+def test_installer_replaces_public_named_core_with_legacy_version_identity(tmp_path):
+    result, installed = _run_installer(
+        tmp_path,
+        core_policy="missing",
+        core_candidate=(CORE_BINARY_NAME, "bluearch-core 9.9.9"),
+    )
+
+    installed_core = tmp_path / "installed" / CORE_BINARY_NAME
+    assert result.returncode == 0, result.stderr
+    assert installed.is_file()
+    assert installed_core.is_file()
+    assert "bluearch-aws-core 0.2.6" in installed_core.read_text(encoding="utf-8")
+
+
 def test_installer_replaces_outdated_public_core_target(tmp_path):
     result, installed = _run_installer(
         tmp_path,

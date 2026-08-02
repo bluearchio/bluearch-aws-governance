@@ -31,7 +31,7 @@ def test_version_option_without_subcommand():
     result = runner.invoke(cli.app, ["--version"])
 
     assert result.exit_code == 0
-    assert result.stdout.strip()
+    assert result.stdout.strip() == "bluearch-aws-governance 0.2.4"
 
 
 @pytest.mark.parametrize("command", [["doctor"], ["catalog", "summary"]])

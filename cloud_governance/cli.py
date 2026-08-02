@@ -62,7 +62,7 @@ def main(
     version: bool = typer.Option(False, "--version", help="Show version and exit."),
 ):
     if version:
-        console.print(__version__)
+        console.print(f"{PUBLIC_GOVERNANCE_EXECUTABLE} {__version__}")
         raise typer.Exit()
     if ctx.invoked_subcommand is None:
         console.print(ctx.get_help())

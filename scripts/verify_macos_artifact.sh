@@ -69,8 +69,8 @@ ARCHITECTURES="$(lipo -archs "$BINARY_PATH")"
   exit 1
 }
 
-[[ "$("$BINARY_PATH" --version)" == "$EXPECTED_VERSION" ]] || {
-  echo "Artifact version does not match expected version $EXPECTED_VERSION" >&2
+[[ "$("$BINARY_PATH" --version)" == "$PUBLIC_BINARY_NAME $EXPECTED_VERSION" ]] || {
+  echo "Artifact version identity must be: $PUBLIC_BINARY_NAME $EXPECTED_VERSION" >&2
   exit 1
 }
 "$BINARY_PATH" --help >/dev/null
