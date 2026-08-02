@@ -68,6 +68,59 @@ jobs:
           [[ "${tag_sha}" == "${main_sha}" ]]
           [[ "${head_sha}" == "${main_sha}" ]]
           git merge-base --is-ancestor "${dev_sha}" "${tag_sha}"
+      - name: Validate release credential availability
+        env:
+          MACOS_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 || secrets.APPLE_CERTIFICATE_BASE64 || secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD || secrets.APPLE_CERTIFICATE_PASSWORD || secrets.MACOS_CERTIFICATE_PWD }}
+          APPLE_API_KEY_P8_BASE64: ${{ secrets.APPLE_API_KEY_P8_BASE64 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD || secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN_2 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in \
+            MACOS_CERTIFICATE_P12_BASE64 \
+            MACOS_CERTIFICATE_PASSWORD \
+            HOMEBREW_TAP_TOKEN; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::Missing required release secret: ${name}"
+              exit 1
+            fi
+          done
+
+          api_key_ready=false
+          apple_id_ready=false
+          if [[ -n "${APPLE_API_KEY_P8_BASE64:-}" && \
+                -n "${APPLE_API_KEY_ID:-}" && \
+                -n "${APPLE_API_ISSUER_ID:-}" ]]; then
+            api_key_ready=true
+          fi
+          if [[ -n "${APPLE_ID:-}" && \
+                -n "${APPLE_ID_PASSWORD:-}" && \
+                -n "${APPLE_TEAM_ID:-}" ]]; then
+            apple_id_ready=true
+          fi
+          if [[ "${api_key_ready}" != true && "${apple_id_ready}" != true ]]; then
+            echo "::error::Configure a complete Apple API key or Apple ID notarization credential set."
+            exit 1
+          fi
+
+          tap_access="$(
+            GH_TOKEN="${HOMEBREW_TAP_TOKEN}" gh api \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${HOMEBREW_TAP_REPO}" \
+              --jq '[.full_name, (.permissions.push // false), (.allow_auto_merge // false)] | @tsv'
+          )"
+          if [[ "${tap_access}" != "${HOMEBREW_TAP_REPO}"$'\ttrue\ttrue' ]]; then
+            echo "::error::The Homebrew tap token needs push access and auto-merge must be enabled."
+            exit 1
+          fi
+          GH_TOKEN="${HOMEBREW_TAP_TOKEN}" gh pr list \
+            --repo "${HOMEBREW_TAP_REPO}" --state open --limit 1 >/dev/null
       - name: Validate bundled catalog
         working-directory: catalog
         run: python scripts/validate.py by-service
@@ -128,10 +181,19 @@ jobs:
           test "$("$verify_dir/$BINARY_NAME" --version)" = "$BINARY_NAME ${RELEASE_TAG#v}"
           "$verify_dir/$BINARY_NAME" --help >/dev/null
           "$verify_dir/$BINARY_NAME" catalog verify
+      - name: Extract final Linux artifact for SBOM
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/sbom-linux-x86_64"
+          tar -xzf "artifacts/$BINARY_NAME-linux-x86_64.tar.gz" \
+            -C "$RUNNER_TEMP/sbom-linux-x86_64" \
+            --no-same-owner --no-same-permissions
+          test -x "$RUNNER_TEMP/sbom-linux-x86_64/$BINARY_NAME"
       - name: Generate Linux SBOM
         uses: anchore/sbom-action@v0.24.0
         with:
-          path: artifacts/${{ env.BINARY_NAME }}-linux-x86_64.tar.gz
+          path: ${{ runner.temp }}/sbom-linux-x86_64
           format: cyclonedx-json
           output-file: artifacts/${{ env.BINARY_NAME }}-linux-x86_64.cyclonedx.json
           upload-artifact: false
@@ -265,10 +327,18 @@ jobs:
       - name: Verify final notarized macOS archive
         shell: bash
         run: bash scripts/verify_macos_artifact.sh "artifacts/$BINARY_NAME-macos-arm64.zip" "$BINARY_NAME" "${RELEASE_TAG#v}"
+      - name: Extract final macOS artifact for SBOM
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/sbom-macos-arm64"
+          ditto -x -k "artifacts/$BINARY_NAME-macos-arm64.zip" \
+            "$RUNNER_TEMP/sbom-macos-arm64"
+          test -x "$RUNNER_TEMP/sbom-macos-arm64/$BINARY_NAME"
       - name: Generate macOS SBOM
         uses: anchore/sbom-action@v0.24.0
         with:
-          path: artifacts/${{ env.BINARY_NAME }}-macos-arm64.zip
+          path: ${{ runner.temp }}/sbom-macos-arm64
           format: cyclonedx-json
           output-file: artifacts/${{ env.BINARY_NAME }}-macos-arm64.cyclonedx.json
           upload-artifact: false
