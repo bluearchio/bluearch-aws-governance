@@ -56,12 +56,16 @@ jobs:
           PY
           )"
           [[ "${RELEASE_TAG}" == "v${committed_version}" ]]
-          git fetch --no-tags origin main:refs/remotes/origin/main
+          git fetch --no-tags origin \
+            main:refs/remotes/origin/main \
+            dev:refs/remotes/origin/dev
           tag_sha="$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")"
           main_sha="$(git rev-parse "refs/remotes/origin/main^{commit}")"
+          dev_sha="$(git rev-parse "refs/remotes/origin/dev^{commit}")"
           head_sha="$(git rev-parse "HEAD^{commit}")"
           [[ "${tag_sha}" == "${main_sha}" ]]
           [[ "${head_sha}" == "${main_sha}" ]]
+          git merge-base --is-ancestor "${dev_sha}" "${tag_sha}"
       - name: Validate bundled catalog
         working-directory: catalog
         run: python scripts/validate.py by-service

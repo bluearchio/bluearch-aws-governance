@@ -49,6 +49,9 @@ def test_release_graph_gates_both_builds_and_publication_on_verification():
     assert "GITHUB_REF_TYPE" in gate["run"]
     assert "v${committed_version}" in gate["run"]
     assert "refs/remotes/origin/main" in gate["run"]
+    assert "refs/remotes/origin/dev" in gate["run"]
+    assert "git merge-base --is-ancestor" in gate["run"]
+    assert '"${dev_sha}" "${tag_sha}"' in gate["run"]
     _named_step(jobs["verify"], "Run Python tests")
     _named_step(jobs["verify"], "Build frontend")
 
