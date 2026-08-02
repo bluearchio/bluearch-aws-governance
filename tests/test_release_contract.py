@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release.yml"
 CI_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
 QUALITY_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "development-quality.yml"
+SCORECARD_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "scorecard.yml"
 MACOS_VERIFIER = ROOT / "scripts" / "verify_macos_artifact.sh"
 
 
@@ -94,6 +95,21 @@ def test_quality_checks_support_current_permissions_and_patched_build_tooling():
     )
     postcss_version = frontend_lock["packages"]["node_modules/postcss"]["version"]
     assert tuple(map(int, postcss_version.split("."))) > (8, 5, 17)
+
+
+def test_scorecard_write_permissions_are_scoped_to_its_job():
+    workflow = yaml.load(
+        SCORECARD_WORKFLOW_PATH.read_text(encoding="utf-8"),
+        Loader=yaml.BaseLoader,
+    )
+
+    assert all(permission != "write" for permission in workflow["permissions"].values())
+    assert workflow["jobs"]["scorecard"]["permissions"] == {
+        "actions": "read",
+        "contents": "read",
+        "id-token": "write",
+        "security-events": "write",
+    }
 
 
 def test_release_jobs_verify_final_archives_before_sbom_and_publish():
