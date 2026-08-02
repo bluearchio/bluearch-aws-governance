@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -87,6 +88,12 @@ def test_quality_checks_support_current_permissions_and_patched_build_tooling():
         ROOT / "build-requirements-macos.txt",
     ):
         assert "setuptools>=83" in requirements_path.read_text(encoding="utf-8").splitlines()
+
+    frontend_lock = json.loads(
+        (ROOT / "frontend" / "package-lock.json").read_text(encoding="utf-8")
+    )
+    postcss_version = frontend_lock["packages"]["node_modules/postcss"]["version"]
+    assert tuple(map(int, postcss_version.split("."))) > (8, 5, 17)
 
 
 def test_release_jobs_verify_final_archives_before_sbom_and_publish():
