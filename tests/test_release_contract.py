@@ -4,18 +4,23 @@ import os
 import shutil
 import subprocess
 import sys
-import tomllib
 import zipfile
 from pathlib import Path
 
 import pytest
 import yaml
 
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised by the Python 3.10 CI job
+    import tomli as tomllib
+
 from scripts.set_release_version import normalize_release_tag
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release.yml"
 CI_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
+QUALITY_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "development-quality.yml"
 MACOS_VERIFIER = ROOT / "scripts" / "verify_macos_artifact.sh"
 
 
@@ -61,6 +66,27 @@ def test_normal_ci_gates_both_dev_and_main_pushes():
     workflow = yaml.load(CI_WORKFLOW_PATH.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
 
     assert set(workflow["on"]["push"]["branches"]) == {"dev", "main"}
+
+
+def test_ci_supports_release_contract_tests_on_python_310():
+    workflow = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert '"tomli>=2.0; python_version < \'3.11\'"' in workflow
+
+
+def test_quality_checks_support_current_permissions_and_patched_build_tooling():
+    workflow = QUALITY_WORKFLOW_PATH.read_text(encoding="utf-8")
+    metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+
+    assert 'go-version: "1.24"' in workflow
+    assert "actionlint@v1.7.10" in workflow
+    assert '"setuptools>=83"' in workflow
+    assert "setuptools>=83" in metadata["build-system"]["requires"]
+    for requirements_path in (
+        ROOT / "build-requirements.txt",
+        ROOT / "build-requirements-macos.txt",
+    ):
+        assert "setuptools>=83" in requirements_path.read_text(encoding="utf-8").splitlines()
 
 
 def test_release_jobs_verify_final_archives_before_sbom_and_publish():
