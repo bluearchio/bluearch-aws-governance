@@ -9,11 +9,11 @@ PIP := $(VENV)/bin/pip
 setup:
 	$(PYTHON) -m venv $(VENV)
 	$(PIP) install -U pip
-	$(PIP) install -e . pytest httpx2
+	$(PIP) install -e . pytest httpx2 PyYAML
 	cd frontend && npm ci
 
 backend-dev:
-	PYTHONPATH=. $(PY) -m cloud_governance.cli web start --host 127.0.0.1 --port 8097
+	PYTHONPATH=. $(PY) -m cloud_governance.cli web serve --host 127.0.0.1 --port 8097
 
 frontend-dev:
 	cd frontend && npm run dev

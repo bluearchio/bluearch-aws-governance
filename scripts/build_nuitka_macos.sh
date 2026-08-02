@@ -48,7 +48,7 @@ cleanup() {
 trap cleanup EXIT
 
 EXTRA_DATA_FLAGS=()
-for rel_path in templates integrations static; do
+for rel_path in templates integrations static catalog_seed; do
   if [ -d "$PACKAGE_NAME/$rel_path" ]; then
     EXTRA_DATA_FLAGS+=("--include-data-dir=$PACKAGE_NAME/$rel_path=$PACKAGE_NAME/$rel_path")
     echo "[OK] Including $PACKAGE_NAME/$rel_path"
