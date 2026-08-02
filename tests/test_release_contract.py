@@ -284,9 +284,9 @@ def test_release_publication_is_resumable_and_never_mutates_public_assets():
     assert commands.index(release_view) < commands.index('gh release create "$RELEASE_TAG"')
     assert commands.index('gh release create "$RELEASE_TAG"') < commands.rindex(release_view)
     assert "[.databaseId, .tagName, .isDraft] | @tsv" in commands
-    assert "IFS=$'\\t' read -r release_id release_tag release_is_draft" in commands
+    assert "IFS=$'\\t' read -r release_id resolved_tag release_is_draft" in commands
     assert '[[ "$release_id" =~ ^[0-9]+$ ]]' in commands
-    assert '[[ "$release_tag" == "$RELEASE_TAG" ]]' in commands
+    assert '[[ "$resolved_tag" == "$RELEASE_TAG" ]]' in commands
     assert '[[ "$release_is_draft" == "true" || "$release_is_draft" == "false" ]]' in commands
     assert 'if [[ "$release_is_draft" == "true" ]]' in commands
     assert 'gh release upload "$RELEASE_TAG" release-assets/* --repo "$GITHUB_REPOSITORY" --clobber' in commands
