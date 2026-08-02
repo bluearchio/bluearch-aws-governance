@@ -26,17 +26,33 @@ python scripts/validate.py by-service
 
 ## Install
 
+Installing a fully qualified formula automatically adds the tap and trusts only
+that formula. Install Core explicitly first so Homebrew records trust for the
+separate dependency before resolving Governance. A separate `brew tap` or
+`brew trust` command is not needed for a first-time install. See
+[Homebrew's tap-trust documentation](https://docs.brew.sh/Tap-Trust).
+
 ```bash
-brew tap bluearchio/tap
-brew trust --formula bluearchio/tap/bluearch-aws-core
-brew trust --formula bluearchio/tap/bluearch-aws-governance
+brew install bluearchio/tap/bluearch-aws-core
 brew install bluearchio/tap/bluearch-aws-governance
 bluearch-aws-core start --daemon
 bluearch-aws-governance catalog import
 bluearch-aws-governance catalog summary
 ```
 
-Formula-specific trust is narrower than trusting the entire tap: it authorizes only the Core and Governance formulas needed here. The Governance formula installs its compatible `bluearch-aws-core` dependency automatically.
+`brew tap bluearchio/tap` only downloads and registers the repository; it does
+not grant trust. Whole-tap trust is unnecessary.
+
+### Recovery for an existing tap
+
+If an existing or partially completed installation refuses to load either
+formula, trust only Core and Governance, then retry the product installation:
+
+```bash
+brew trust --formula bluearchio/tap/bluearch-aws-core
+brew trust --formula bluearchio/tap/bluearch-aws-governance
+brew install bluearchio/tap/bluearch-aws-governance
+```
 
 Linux:
 

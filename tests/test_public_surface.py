@@ -47,18 +47,25 @@ def test_health_identifies_public_governance_service(monkeypatch):
     assert response.json()["service"] == "bluearch-aws-governance"
 
 
-def test_customer_docs_use_formula_specific_trust_and_public_commands():
+def test_customer_docs_use_direct_formula_install_and_public_commands():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
     installer = (ROOT / "scripts/install-linux.sh").read_text(encoding="utf-8")
 
+    assert "automatically adds the tap and trusts only" in readme
+    assert "`brew tap bluearchio/tap` only downloads and registers" in readme
+    assert "brew install bluearchio/tap/bluearch-aws-core" in readme
+    assert readme.index("brew install bluearchio/tap/bluearch-aws-core") < readme.index(
+        "brew install bluearchio/tap/bluearch-aws-governance"
+    )
+    recovery = readme.split("### Recovery for an existing tap", 1)[1]
     assert "brew trust --formula bluearchio/tap/bluearch-aws-core" in readme
     assert "brew trust --formula bluearchio/tap/bluearch-aws-governance" in readme
     assert "brew install bluearchio/tap/bluearch-aws-governance" in readme
-    assert readme.index("brew trust --formula bluearchio/tap/bluearch-aws-core") < readme.index(
+    assert recovery.index("brew trust --formula bluearchio/tap/bluearch-aws-core") < recovery.index(
         "brew install bluearchio/tap/bluearch-aws-governance"
     )
-    assert readme.index("brew trust --formula bluearchio/tap/bluearch-aws-governance") < readme.index(
+    assert recovery.index("brew trust --formula bluearchio/tap/bluearch-aws-governance") < recovery.index(
         "brew install bluearchio/tap/bluearch-aws-governance"
     )
     assert "bluearch-aws-governance catalog import" in readme
