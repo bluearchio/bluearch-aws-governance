@@ -64,6 +64,36 @@ def test_release_graph_gates_both_builds_and_publication_on_verification():
     _named_step(jobs["verify"], "Build frontend")
 
 
+def test_release_credentials_fail_fast_before_verification_builds():
+    verify = _workflow()["jobs"]["verify"]
+    gate_index, _ = _named_step(verify, "Verify immutable tag and main commit")
+    credentials_index, credentials = _named_step(
+        verify, "Validate release credential availability"
+    )
+    catalog_index, _ = _named_step(verify, "Validate bundled catalog")
+
+    assert gate_index < credentials_index < catalog_index
+    assert credentials["env"]["HOMEBREW_TAP_TOKEN"] == "${{ secrets.HOMEBREW_TAP_TOKEN_2 }}"
+    assert "MACOS_CERTIFICATE_P12_BASE64" in credentials["env"]
+    assert "MACOS_CERTIFICATE_PASSWORD" in credentials["env"]
+    for name in (
+        "APPLE_API_KEY_P8_BASE64",
+        "APPLE_API_KEY_ID",
+        "APPLE_API_ISSUER_ID",
+        "APPLE_ID",
+        "APPLE_ID_PASSWORD",
+        "APPLE_TEAM_ID",
+    ):
+        assert name in credentials["env"]
+        assert name in credentials["run"]
+    assert "${!name:-}" in credentials["run"]
+    assert 'GH_TOKEN="${HOMEBREW_TAP_TOKEN}" gh api' in credentials["run"]
+    assert ".permissions.push" in credentials["run"]
+    assert ".allow_auto_merge" in credentials["run"]
+    assert 'GH_TOKEN="${HOMEBREW_TAP_TOKEN}" gh pr list' in credentials["run"]
+    assert "set -x" not in credentials["run"]
+
+
 def test_normal_ci_gates_both_dev_and_main_pushes():
     workflow = yaml.load(CI_WORKFLOW_PATH.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
 
@@ -116,22 +146,32 @@ def test_release_jobs_verify_final_archives_before_sbom_and_publish():
     jobs = _workflow()["jobs"]
 
     linux_verify_index, linux_verify = _named_step(jobs["linux"], "Verify final Linux archive")
+    linux_stage_index, linux_stage = _named_step(
+        jobs["linux"], "Extract final Linux artifact for SBOM"
+    )
     linux_sbom_index, linux_sbom = _named_step(jobs["linux"], "Generate Linux SBOM")
-    assert linux_verify_index < linux_sbom_index
-    assert linux_sbom["with"]["path"].endswith("-linux-x86_64.tar.gz")
+    assert linux_verify_index < linux_stage_index < linux_sbom_index
+    assert "-linux-x86_64.tar.gz" in linux_stage["run"]
+    assert "tar -xzf" in linux_stage["run"]
+    assert linux_sbom["with"]["path"] == "${{ runner.temp }}/sbom-linux-x86_64"
     assert "catalog verify" in linux_verify["run"]
     assert '"$BINARY_NAME ${RELEASE_TAG#v}"' in linux_verify["run"]
 
     notarize_index, notarize = _named_step(jobs["macos"], "Codesign and notarize macOS asset")
     mac_verify_index, mac_verify = _named_step(jobs["macos"], "Verify final notarized macOS archive")
+    mac_stage_index, mac_stage = _named_step(
+        jobs["macos"], "Extract final macOS artifact for SBOM"
+    )
     mac_sbom_index, mac_sbom = _named_step(jobs["macos"], "Generate macOS SBOM")
-    assert notarize_index < mac_verify_index < mac_sbom_index
+    assert notarize_index < mac_verify_index < mac_stage_index < mac_sbom_index
     assert "--keepParent" not in notarize["run"]
     assert "--norsrc --noextattr --noqtn --noacl" in notarize["run"]
     assert "cd dist" in notarize["run"]
     assert mac_verify["run"].startswith("bash scripts/verify_macos_artifact.sh")
     assert '"${RELEASE_TAG#v}"' in mac_verify["run"]
-    assert mac_sbom["with"]["path"].endswith("-macos-arm64.zip")
+    assert "-macos-arm64.zip" in mac_stage["run"]
+    assert "ditto -x -k" in mac_stage["run"]
+    assert mac_sbom["with"]["path"] == "${{ runner.temp }}/sbom-macos-arm64"
 
     checksum_index, checksum = _named_step(jobs["publish"], "Generate checksums")
     attest_index, _ = _named_step(jobs["publish"], "Generate artifact provenance attestations")
