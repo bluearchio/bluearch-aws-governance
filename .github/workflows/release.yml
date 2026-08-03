@@ -198,7 +198,7 @@ jobs:
           test "$("$verify_dir/$BINARY_NAME" --version)" = "$BINARY_NAME ${RELEASE_TAG#v}"
           "$verify_dir/$BINARY_NAME" --help >/dev/null
           "$verify_dir/$BINARY_NAME" catalog verify
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-linux-x86_64
           path: artifacts/*
@@ -493,7 +493,7 @@ jobs:
             exit 1
           fi
           test ! -e "$record_file"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-macos-arm64
           path: artifacts/*
@@ -541,7 +541,7 @@ jobs:
           output-file: sbom-output/${{ env.BINARY_NAME }}-macos-arm64.cyclonedx.json
           upload-artifact: false
           upload-release-assets: false
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-sboms
           path: sbom-output/*
