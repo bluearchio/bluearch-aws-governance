@@ -78,7 +78,7 @@ def _write_core_release(dist_root: Path) -> None:
     release_dir = dist_root / "releases" / "bluearch-aws-core" / "latest"
     release_dir.mkdir(parents=True)
     asset = release_dir / CORE_ASSET_NAME
-    payload = b"#!/bin/sh\necho bluearch-aws-core 0.2.6\n"
+    payload = b"#!/bin/sh\necho bluearch-aws-core 0.2.9\n"
     with tarfile.open(asset, "w:gz") as archive:
         item = tarfile.TarInfo(CORE_BINARY_NAME)
         item.size = len(payload)
@@ -153,7 +153,7 @@ def _probe_first_download_url(
     _write_fake_uname(fake_bin)
     core = fake_bin / CORE_BINARY_NAME
     core.write_text(
-        "#!/bin/sh\necho 'bluearch-aws-core 0.2.6'\n",
+        "#!/bin/sh\necho 'bluearch-aws-core 0.2.9'\n",
         encoding="utf-8",
     )
     core.chmod(0o755)
@@ -289,7 +289,7 @@ def test_installer_keeps_compatible_canonical_public_core(tmp_path):
     result, installed = _run_installer(
         tmp_path,
         core_policy="missing",
-        core_candidate=(CORE_BINARY_NAME, "bluearch-aws-core 0.2.6"),
+        core_candidate=(CORE_BINARY_NAME, "bluearch-aws-core 0.2.9"),
     )
 
     assert result.returncode == 0, result.stderr
@@ -308,7 +308,7 @@ def test_installer_replaces_public_name_symlink_to_legacy_core(tmp_path):
     assert result.returncode == 0, result.stderr
     assert installed.is_file()
     assert installed_core.is_file()
-    assert "0.2.6" in installed_core.read_text(encoding="utf-8")
+    assert "0.2.9" in installed_core.read_text(encoding="utf-8")
 
 
 def test_installer_replaces_public_named_core_with_legacy_version_identity(tmp_path):
@@ -322,18 +322,18 @@ def test_installer_replaces_public_named_core_with_legacy_version_identity(tmp_p
     assert result.returncode == 0, result.stderr
     assert installed.is_file()
     assert installed_core.is_file()
-    assert "bluearch-aws-core 0.2.6" in installed_core.read_text(encoding="utf-8")
+    assert "bluearch-aws-core 0.2.9" in installed_core.read_text(encoding="utf-8")
 
 
 def test_installer_replaces_outdated_public_core_target(tmp_path):
     result, installed = _run_installer(
         tmp_path,
         core_policy="missing",
-        core_candidate=(CORE_BINARY_NAME, "bluearch-aws-core 0.2.5"),
+        core_candidate=(CORE_BINARY_NAME, "bluearch-aws-core 0.2.8"),
     )
 
     installed_core = tmp_path / "installed" / CORE_BINARY_NAME
     assert result.returncode == 0, result.stderr
     assert installed.is_file()
     assert installed_core.is_file()
-    assert "0.2.6" in installed_core.read_text(encoding="utf-8")
+    assert "0.2.9" in installed_core.read_text(encoding="utf-8")

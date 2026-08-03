@@ -7,7 +7,7 @@ PACKAGE_NAME="${PACKAGE_NAME:-cloud_governance}"
 ENTRY_IMPORT="${ENTRY_IMPORT:-cloud_governance.cli}"
 APP_OBJECT="${APP_OBJECT:-app}"
 if [ -z "${ONEFILE_TEMPDIR:-}" ]; then
-  ONEFILE_TEMPDIR="{HOME}/.bluearch-aws-governance/bin"
+  ONEFILE_TEMPDIR="{TEMP}/bluearch-aws-governance_{PID}_{TIME}"
 fi
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

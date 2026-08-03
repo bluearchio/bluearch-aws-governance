@@ -5,7 +5,7 @@ from cloud_governance.core_client import CoreClient, CoreRuntimeError
 
 
 def test_minimum_core_version_is_public_core_release():
-    assert config.DEFAULT_MINIMUM_CORE_VERSION == "0.2.6"
+    assert config.DEFAULT_MINIMUM_CORE_VERSION == "0.2.9"
 
 
 def test_incompatible_core_message_uses_only_public_core_command(monkeypatch):
