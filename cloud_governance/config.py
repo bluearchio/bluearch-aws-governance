@@ -7,7 +7,7 @@ from pathlib import Path
 
 DEFAULT_CORE_URL = "http://127.0.0.1:8094"
 DEFAULT_TOKEN_PATH = Path("~/.bluearch-core/runtime/api-token").expanduser()
-DEFAULT_MINIMUM_CORE_VERSION = "0.2.6"
+DEFAULT_MINIMUM_CORE_VERSION = "0.2.9"
 MINIMUM_CORE_VERSION = os.environ.get("GOVERNANCE_HUB_MINIMUM_CORE_VERSION", DEFAULT_MINIMUM_CORE_VERSION)
 
 

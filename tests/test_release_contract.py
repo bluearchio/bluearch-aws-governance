@@ -239,6 +239,43 @@ def test_release_jobs_verify_archives_before_separate_sbom_and_publish():
     assert "sha256sum -c SHA256SUMS" in checksum["run"]
 
 
+def test_macos_release_gates_upload_on_real_v025_brownfield_handoff():
+    macos = _workflow()["jobs"]["macos"]
+    verify_index, _ = _named_step(macos, "Verify final notarized macOS archive")
+    brownfield_index, brownfield = _named_step(
+        macos, "Brownfield smoke-test v0.2.5 Nuitka daemon handoff"
+    )
+    upload_index = next(
+        index
+        for index, step in enumerate(macos["steps"])
+        if step.get("uses") == "actions/upload-artifact@v4"
+    )
+    commands = brownfield["run"]
+
+    assert verify_index < brownfield_index < upload_index
+    assert "bluearch-aws-governance/releases/download/v0.2.5" in commands
+    assert "bf0db49fc3ac46400d5f7d2484f2505553d0744ed6cf92eb5c77e2477211aff7" in commands
+    assert '"BLUEARCH_CORE_URL=http://127.0.0.1:28094"' in commands
+    assert '"GOVERNANCE_HUB_AUTO_IMPORT_CATALOG=0"' in commands
+    assert 'rm -rf "$brownfield_dir/homebrew/Cellar/$BINARY_NAME/0.2.5"' in commands
+    assert '["supervisor"]["pid"]' in commands
+    assert '["listener"]["pid"]' in commands
+    assert "The v0.2.5 Nuitka supervisor is still running" in commands
+    assert "The v0.2.5 Nuitka listener is still running" in commands
+    assert 'env "${runtime_env[@]}" "$candidate_binary" web stop' in commands
+    assert "The candidate left port 8097 occupied after stop" in commands
+    assert 'test ! -e "$record_file"' in commands
+
+
+def test_packaged_runtime_declares_psutil_for_listener_identity_discovery():
+    metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+
+    assert any(
+        dependency.startswith("psutil>=")
+        for dependency in metadata["project"]["dependencies"]
+    )
+
+
 def test_attestation_job_has_required_artifact_metadata_permission():
     publish = _workflow()["jobs"]["publish"]
 
@@ -401,6 +438,24 @@ def test_every_checkout_disables_persisted_credentials():
     assert all(step["with"]["persist-credentials"] == "false" for step in steps)
 
 
+@pytest.mark.parametrize(
+    "script_name",
+    ["build_nuitka_linux.sh", "build_nuitka_macos.sh"],
+)
+def test_onefile_runtime_uses_unique_product_specific_system_temp_directory(
+    script_name,
+):
+    build_script = (ROOT / "scripts" / script_name).read_text(encoding="utf-8")
+
+    assert 'if [ -z "${ONEFILE_TEMPDIR:-}" ]; then' in build_script
+    assert (
+        'ONEFILE_TEMPDIR="{TEMP}/bluearch-aws-governance_{PID}_{TIME}"'
+        in build_script
+    )
+    assert '--onefile-tempdir-spec="$ONEFILE_TEMPDIR"' in build_script
+    assert "{HOME}/.bluearch-aws-governance/bin" not in build_script
+
+
 def test_every_release_shell_block_is_syntactically_valid_bash():
     workflow = _workflow()
     for job_name, job in workflow["jobs"].items():
@@ -439,7 +494,7 @@ def test_manual_preflight_shell_block_is_syntactically_valid_bash():
 
 @pytest.mark.parametrize(
     "value",
-    ["0.2.5", "v0.2", "v0.2.5-rc1", "main", "", " v0.2.5 "],
+    ["0.2.6", "v0.2", "v0.2.6-rc1", "main", "", " v0.2.6 "],
 )
 def test_release_version_setter_rejects_noncanonical_tags(value):
     with pytest.raises(ValueError):
@@ -447,13 +502,13 @@ def test_release_version_setter_rejects_noncanonical_tags(value):
 
 
 def test_release_version_setter_returns_bare_pep440_version():
-    assert normalize_release_tag("v0.2.5") == "0.2.5"
+    assert normalize_release_tag("v0.2.6") == "0.2.6"
 
     metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     namespace: dict[str, str] = {}
     exec((ROOT / "cloud_governance/__init__.py").read_text(encoding="utf-8"), namespace)
-    assert metadata["project"]["version"] == "0.2.5"
-    assert namespace["__version__"] == "0.2.5"
+    assert metadata["project"]["version"] == "0.2.6"
+    assert namespace["__version__"] == "0.2.6"
 
 
 def test_release_version_setter_writes_bare_version_to_both_metadata_files(tmp_path):
@@ -490,7 +545,7 @@ def test_macos_verifier_rejects_unsigned_final_archive(tmp_path):
     staging = tmp_path / "dist"
     staging.mkdir()
     unsigned = staging / "bluearch-aws-governance"
-    unsigned.write_text("#!/bin/sh\necho bluearch-aws-governance 0.2.5\n", encoding="utf-8")
+    unsigned.write_text("#!/bin/sh\necho bluearch-aws-governance 0.2.6\n", encoding="utf-8")
     unsigned.chmod(0o755)
     archive = tmp_path / "bluearch-aws-governance-macos-arm64.zip"
     subprocess.run(
@@ -515,7 +570,7 @@ def test_macos_verifier_rejects_unsigned_final_archive(tmp_path):
             os.fspath(MACOS_VERIFIER),
             os.fspath(archive),
             "bluearch-aws-governance",
-            "0.2.5",
+            "0.2.6",
         ],
         cwd=ROOT,
         capture_output=True,
@@ -559,7 +614,7 @@ def test_macos_verifier_inspects_archive_before_extraction(tmp_path):
             os.fspath(MACOS_VERIFIER),
             os.fspath(archive),
             "bluearch-aws-governance",
-            "0.2.5",
+            "0.2.6",
         ],
         cwd=ROOT,
         capture_output=True,
